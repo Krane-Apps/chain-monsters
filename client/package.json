@@ -1,0 +1,58 @@
+{
+  "name": "chain-monster",
+  "private": false,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "codegen": "graphql-codegen",
+    "gen:models": "npx create-models ../contracts/manifests/dev/manifest.json ./src/dojo/generated/contractModels.ts"
+  },
+  "bin": {
+    "create-models": "./bin/models.cjs"
+  },
+  "dependencies": {
+    "@cartridge/connector": "^0.3.23",
+    "@dojoengine/core": "^0.6.125",
+    "@dojoengine/create-burner": "^0.6.125",
+    "@dojoengine/react": "^0.6.125",
+    "@dojoengine/recs": "0.1.35",
+    "@dojoengine/state": "^0.6.125",
+    "@dojoengine/torii-client": "^0.6.125",
+    "@dojoengine/utils": "^0.6.125",
+    "@latticexyz/react": "^2.0.12",
+    "@latticexyz/utils": "^2.0.12",
+    "ethers": "^5.7.2",
+    "graphql": "^16.8.2",
+    "graphql-request": "^6.1.0",
+    "mobx": "^6.12.4",
+    "proxy-deep": "^3.1.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "rxjs": "^7.8.1",
+    "sonner": "^1.5.0",
+    "starknet": "^6.9.0",
+    "vite-plugin-top-level-await": "^1.4.1",
+    "vite-plugin-wasm": "^3.3.0"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.2",
+    "@graphql-codegen/typescript": "^4.0.7",
+    "@graphql-codegen/typescript-graphql-request": "^5.0.0",
+    "@graphql-codegen/typescript-operations": "^4.2.1",
+    "@types/node": "^20.14.2",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "@typescript-eslint/parser": "^5.62.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-refresh": "^0.3.5",
+    "typescript": "^5.4.5",
+    "vite": "^4.5.3"
+  }
+}

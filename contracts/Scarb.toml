@@ -1,0 +1,43 @@
+[package]
+name = "chain_monsters"
+version = "0.0.0"
+edition = "2023_10"
+
+[cairo]
+sierra-replace-ids = true
+
+[scripts]
+migrate = "sozo build && sozo migrate plan && sozo migrate apply"
+
+[dependencies]
+alexandria_math = { git = "https://github.com/keep-starknet-strange/alexandria", rev = "78b0d51" }
+origami = { git = "https://github.com/dojoengine/origami", rev = "ebc3677"  }
+dojo = { git = "https://github.com/dojoengine/dojo", tag = "v0.7.0-alpha.5" }
+
+[[target.dojo]]
+
+[tool.dojo]
+initializer_class_hash = "0xbeef"
+
+[profile.dev.tool.dojo.env]
+rpc_url = "http://localhost:5050/"
+account_address = "0xb3ff441a68610b30fd5e2abbf3a1548eb6ba6f3559f2862bf2dc757e5828ca"
+private_key = "0x2bbf4f9fd0bbb2e60b0316c1fe0b76cf7a4d0198bd493ced9b8df2a3a24d68a"
+
+[profile.slot.tool.dojo.env]
+rpc_url = "https://api.cartridge.gg/x/guild-era/katana"
+account_address = ""
+private_key = ""
+
+[tool.dojo.world]
+name = "zKastle"
+description = "Action game."
+cover_uri = "file://assets/cover.png"
+icon_uri = "file://assets/icon.png"
+website = "https://github.com/dojoengine/dojo-starter"
+
+[tool.dojo.world.socials]
+x = "https://x.com/ohayo_dojo"
+discord = "https://discord.gg/FB2wR6uF"
+github = "https://github.com/dojoengine/dojo-starter"
+telegram = "https://t.me/dojoengine"
