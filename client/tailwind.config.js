@@ -17,9 +17,6 @@ module.exports = {
       },
     },
     extend: {
-      fontFamily: {
-        body: ["Rubik Mono One", "mono"],
-      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

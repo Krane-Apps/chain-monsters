@@ -6,4 +6,58 @@ export type ContractComponents = Awaited<
   ReturnType<typeof defineContractComponents>
 >;
 
-export function defineContractComponents(world: World) {}
+export function defineContractComponents(world: World) {
+  return {
+    Game: (() => {
+      return defineComponent(
+        world,
+        {
+          id: RecsType.Number,
+          over: RecsType.Boolean,
+          players: RecsType.Number,
+          player_count: RecsType.Number,
+          nonce: RecsType.Number,
+          seed: RecsType.BigInt,
+          host: RecsType.BigInt,
+        },
+        {
+          metadata: {
+            name: "Game",
+            types: ["u32", "bool", "u8", "u8", "u16", "felt252", "felt252"],
+          },
+        },
+      );
+    })(),
+    Player: (() => {
+      return defineComponent(
+        world,
+        {
+          id: RecsType.BigInt,
+          name: RecsType.BigInt,
+        },
+        {
+          metadata: {
+            name: "Player",
+            types: ["felt252", "felt252"],
+          },
+        },
+      );
+    })(),
+    Team: (() => {
+      return defineComponent(
+        world,
+        {
+          game_id: RecsType.Number,
+          index: RecsType.Number,
+          id: RecsType.BigInt,
+        },
+        {
+          metadata: {
+            name: "Team",
+            types: ["u32", "u8", "felt252"],
+          },
+        },
+      );
+    })(),
+  };
+}

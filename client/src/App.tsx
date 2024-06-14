@@ -1,15 +1,20 @@
-import { useComponentValue } from "@dojoengine/react";
-import { Entity } from "@dojoengine/recs";
-import { useEffect, useState } from "react";
 import "./App.css";
-import { getEntityIdFromKeys } from "@dojoengine/utils";
-import { useDojo } from "./dojo/useDojo";
+import { Account } from "./ui/components/Account";
+import { Spawn } from "./ui/actions/Spawn";
+import { Create } from "./ui/actions/Create";
+import { Games } from "./ui/containers/Games";
+import { Start } from "./ui/actions/Start";
 
 function App() {
   return (
-    <>
-      <div>Hello World!</div>
-    </>
+    <div className="flex flex-col gap-4">
+      <h1>Chain Monsters</h1>
+      <Account />
+      <Spawn />
+      <Create />
+      <Games />
+      <Start gameId={1} />
+    </div>
   );
 }
 

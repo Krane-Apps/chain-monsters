@@ -12,19 +12,41 @@ export interface Initialize extends Signer {
   world: string;
 }
 
-export interface Create extends Signer {
+export interface Spawn extends Signer {
   name: string;
+}
+
+export interface Create extends Signer {}
+
+export interface Join extends Signer {
+  game_id: number;
+}
+
+export interface Ready extends Signer {
+  game_id: number;
+  status: boolean;
+}
+
+export interface Transfer extends Signer {
+  game_id: number;
+  team_index: number;
+}
+
+export interface Leave extends Signer {
+  game_id: number;
+}
+
+export interface Kick extends Signer {
+  game_id: number;
+  team_index: number;
+}
+
+export interface Remove extends Signer {
+  game_id: number;
 }
 
 export interface Start extends Signer {
   game_id: number;
-}
-
-export interface Play extends Signer {
-  game_id: number;
-  action: number;
-  choice: number;
-  resources: number;
 }
 
 export type IWorld = Awaited<ReturnType<typeof setupWorld>>;
@@ -52,33 +74,123 @@ export async function setupWorld(provider: DojoProvider, config: Config) {
       throw new Error(`Contract ${contract_name} not found in manifest`);
     }
 
-    const initialize = async ({ account, world }: Initialize) => {
-      try {
-        return await provider.execute(
-          account,
-          contract_name,
-          "initialize",
-          [world],
-          details,
-        );
-      } catch (error) {
-        console.error("Error executing initialize:", error);
-        throw error;
-      }
-    };
-
-    const create = async ({ account, name }: Create) => {
+    const spawn = async ({ account, name }: Spawn) => {
       try {
         const encoded_name = shortString.encodeShortString(name);
         return await provider.execute(
           account,
           contract_name,
-          "create",
+          "spawn",
           [provider.getWorldAddress(), encoded_name],
           details,
         );
       } catch (error) {
+        console.error("Error executing spawn:", error);
+        throw error;
+      }
+    };
+
+    const create = async ({ account }: Create) => {
+      try {
+        return await provider.execute(
+          account,
+          contract_name,
+          "create",
+          [provider.getWorldAddress()],
+          details,
+        );
+      } catch (error) {
         console.error("Error executing create:", error);
+        throw error;
+      }
+    };
+
+    const join = async ({ account, game_id }: Join) => {
+      try {
+        return await provider.execute(
+          account,
+          contract_name,
+          "join",
+          [provider.getWorldAddress(), game_id],
+          details,
+        );
+      } catch (error) {
+        console.error("Error executing join:", error);
+        throw error;
+      }
+    };
+
+    const ready = async ({ account, game_id, status }: Ready) => {
+      try {
+        return await provider.execute(
+          account,
+          contract_name,
+          "ready",
+          [provider.getWorldAddress(), game_id, status ? 1 : 0],
+          details,
+        );
+      } catch (error) {
+        console.error("Error executing ready:", error);
+        throw error;
+      }
+    };
+
+    const transfer = async ({ account, game_id, team_index }: Transfer) => {
+      try {
+        return await provider.execute(
+          account,
+          contract_name,
+          "transfer",
+          [provider.getWorldAddress(), game_id, team_index],
+          details,
+        );
+      } catch (error) {
+        console.error("Error executing transfer:", error);
+        throw error;
+      }
+    };
+
+    const leave = async ({ account, game_id }: Leave) => {
+      try {
+        return await provider.execute(
+          account,
+          contract_name,
+          "leave",
+          [provider.getWorldAddress(), game_id],
+          details,
+        );
+      } catch (error) {
+        console.error("Error executing leave:", error);
+        throw error;
+      }
+    };
+
+    const kick = async ({ account, game_id, team_index }: Kick) => {
+      try {
+        return await provider.execute(
+          account,
+          contract_name,
+          "kick",
+          [provider.getWorldAddress(), game_id, team_index],
+          details,
+        );
+      } catch (error) {
+        console.error("Error executing kick:", error);
+        throw error;
+      }
+    };
+
+    const remove = async ({ account, game_id }: Remove) => {
+      try {
+        return await provider.execute(
+          account,
+          contract_name,
+          "delete",
+          [provider.getWorldAddress(), game_id],
+          details,
+        );
+      } catch (error) {
+        console.error("Error executing delete:", error);
         throw error;
       }
     };
@@ -89,7 +201,7 @@ export async function setupWorld(provider: DojoProvider, config: Config) {
           account,
           contract_name,
           "start",
-          [game_id],
+          [provider.getWorldAddress(), game_id],
           details,
         );
       } catch (error) {
@@ -98,33 +210,17 @@ export async function setupWorld(provider: DojoProvider, config: Config) {
       }
     };
 
-    const play = async ({
-      account,
-      game_id,
-      action,
-      choice,
-      resources,
-    }: Play) => {
-      try {
-        return await provider.execute(
-          account,
-          contract_name,
-          "play",
-          [game_id, action, choice, resources],
-          details,
-        );
-      } catch (error) {
-        console.error("Error executing play:", error);
-        throw error;
-      }
-    };
-
     return {
       address: contract.address,
-      initialize,
+      spawn,
       create,
+      join,
+      ready,
+      transfer,
+      leave,
+      kick,
+      remove,
       start,
-      play,
     };
   }
 

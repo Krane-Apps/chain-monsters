@@ -976,8 +976,8 @@
     {
       "kind": "DojoContract",
       "address": "0x2eefa76e9bc8bc9dbff1af729994a15f6b994dc1e50fbb988a8ba5a790cec0b",
-      "class_hash": "0x4bdeed25fdfd94f5d21f2ac0cd40f6b88aef1322010533b8cffd5ba258c7a43",
-      "original_class_hash": "0x4bdeed25fdfd94f5d21f2ac0cd40f6b88aef1322010533b8cffd5ba258c7a43",
+      "class_hash": "0x3b3002509e85417c4d86bb2d766d35c37cedb0c3326e6ec901161d711e406d4",
+      "original_class_hash": "0x3b3002509e85417c4d86bb2d766d35c37cedb0c3326e6ec901161d711e406d4",
       "base_class_hash": "0x22f3e55b61d86c2ac5239fa3b3b8761f26b9a5c0b5f61ddbd5d756ced498b46",
       "abi": [
         {
@@ -1735,23 +1735,13 @@
           "key": true
         },
         {
-          "name": "game_id",
-          "type": "u32",
-          "key": false
-        },
-        {
-          "name": "achievements",
-          "type": "u64",
-          "key": false
-        },
-        {
           "name": "name",
           "type": "felt252",
           "key": false
         }
       ],
-      "class_hash": "0x1f49c361ebde434831d24cb1b90c3b4708834246401be8a9a40aeb5a8f4b86b",
-      "original_class_hash": "0x1f49c361ebde434831d24cb1b90c3b4708834246401be8a9a40aeb5a8f4b86b",
+      "class_hash": "0x11ad5627f8e26d3d40a7ee7ec0fec03fc117c8a47479a343a62679975c1cf34",
+      "original_class_hash": "0x11ad5627f8e26d3d40a7ee7ec0fec03fc117c8a47479a343a62679975c1cf34",
       "abi": [
         {
           "type": "impl",
@@ -2083,14 +2073,6 @@
             {
               "name": "id",
               "type": "core::felt252"
-            },
-            {
-              "name": "game_id",
-              "type": "core::integer::u32"
-            },
-            {
-              "name": "achievements",
-              "type": "core::integer::u64"
             },
             {
               "name": "name",
