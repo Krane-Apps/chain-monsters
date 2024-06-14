@@ -1,12 +1,12 @@
 [world]
 kind = "WorldContract"
-class_hash = "0x64728e0c0713811c751930f8d3292d683c23f107c89b0a101425d9e80adb1c0"
-original_class_hash = "0x64728e0c0713811c751930f8d3292d683c23f107c89b0a101425d9e80adb1c0"
+class_hash = "0xf6f44afb3cacbcc01a371aff62c86ca9a45feba065424c99f7cd8637514d8f"
+original_class_hash = "0xf6f44afb3cacbcc01a371aff62c86ca9a45feba065424c99f7cd8637514d8f"
 abi = "manifests/dev/abis/deployments/dojo_world_world.json"
-address = "0x3b5a8147f17a7ab5d5857a24d0d98574011445db0cab5ac75f588644b2b1517"
-transaction_hash = "0x6ae412f403271b047d348999bc1dddf726ed126763bdf491f3e1c9e9a6353d8"
+address = "0x1fb599c78048117153dca7958babeeffe9c11a480a58c6654e7e3965320870"
+transaction_hash = "0x3fe317fd116af3422825efb95bf8e00c7f5f91462870cf960975457680dfadb"
 block_number = 3
-seed = "dojo_starter"
+seed = "chain_monsters"
 name = "dojo::world::world"
 
 [world.metadata]
@@ -21,51 +21,108 @@ name = "dojo::base::base"
 
 [[contracts]]
 kind = "DojoContract"
-address = "0x67ee87bc4f4ed8c613bb9578e9cab6a61efd9a1b60e6a32998822608abb9678"
-class_hash = "0x1b5a6e88a9e92ec19f8e1f3fa8be9e77fb599ef2b0f36c2777e7f824d3c260a"
-original_class_hash = "0x1b5a6e88a9e92ec19f8e1f3fa8be9e77fb599ef2b0f36c2777e7f824d3c260a"
+address = "0x2eefa76e9bc8bc9dbff1af729994a15f6b994dc1e50fbb988a8ba5a790cec0b"
+class_hash = "0x4bdeed25fdfd94f5d21f2ac0cd40f6b88aef1322010533b8cffd5ba258c7a43"
+original_class_hash = "0x4bdeed25fdfd94f5d21f2ac0cd40f6b88aef1322010533b8cffd5ba258c7a43"
 base_class_hash = "0x22f3e55b61d86c2ac5239fa3b3b8761f26b9a5c0b5f61ddbd5d756ced498b46"
-abi = "manifests/dev/abis/deployments/contracts/dojo_starter_systems_actions_actions.json"
+abi = "manifests/dev/abis/deployments/contracts/chain_monsters_systems_actions_actions.json"
 reads = []
-writes = []
+writes = [
+    "Player",
+    "Game",
+    "Team",
+]
 computed = []
-name = "dojo_starter::systems::actions::actions"
+init_calldata = []
+name = "chain_monsters::systems::actions::actions"
 
 [[models]]
 kind = "DojoModel"
-class_hash = "0x3384498a9145add2bb43ac1a3db655af61bce0813398860088b9e8627e6b18f"
-original_class_hash = "0x3384498a9145add2bb43ac1a3db655af61bce0813398860088b9e8627e6b18f"
-abi = "manifests/dev/abis/deployments/models/dojo_starter_models_moves_moves.json"
-name = "dojo_starter::models::moves::moves"
+class_hash = "0x50db134100615e1bdc7bbce17585d80e25bb81ff852ce43e9143a92152a45f8"
+original_class_hash = "0x50db134100615e1bdc7bbce17585d80e25bb81ff852ce43e9143a92152a45f8"
+abi = "manifests/dev/abis/deployments/models/chain_monsters_models_index_game.json"
+name = "chain_monsters::models::index::game"
 
 [[models.members]]
-name = "player"
-type = "ContractAddress"
+name = "id"
+type = "u32"
 key = true
 
 [[models.members]]
-name = "remaining"
+name = "over"
+type = "bool"
+key = false
+
+[[models.members]]
+name = "players"
 type = "u8"
 key = false
 
 [[models.members]]
-name = "last_direction"
-type = "Direction"
+name = "player_count"
+type = "u8"
+key = false
+
+[[models.members]]
+name = "nonce"
+type = "u16"
+key = false
+
+[[models.members]]
+name = "seed"
+type = "felt252"
+key = false
+
+[[models.members]]
+name = "host"
+type = "felt252"
 key = false
 
 [[models]]
 kind = "DojoModel"
-class_hash = "0xbf299b3b39fe9e68785941a96c65ca04382ba2e1effd255311ab4e07e3d433"
-original_class_hash = "0xbf299b3b39fe9e68785941a96c65ca04382ba2e1effd255311ab4e07e3d433"
-abi = "manifests/dev/abis/deployments/models/dojo_starter_models_position_position.json"
-name = "dojo_starter::models::position::position"
+class_hash = "0x1f49c361ebde434831d24cb1b90c3b4708834246401be8a9a40aeb5a8f4b86b"
+original_class_hash = "0x1f49c361ebde434831d24cb1b90c3b4708834246401be8a9a40aeb5a8f4b86b"
+abi = "manifests/dev/abis/deployments/models/chain_monsters_models_index_player.json"
+name = "chain_monsters::models::index::player"
 
 [[models.members]]
-name = "player"
-type = "ContractAddress"
+name = "id"
+type = "felt252"
 key = true
 
 [[models.members]]
-name = "vec"
-type = "Vec2"
+name = "game_id"
+type = "u32"
+key = false
+
+[[models.members]]
+name = "achievements"
+type = "u64"
+key = false
+
+[[models.members]]
+name = "name"
+type = "felt252"
+key = false
+
+[[models]]
+kind = "DojoModel"
+class_hash = "0x2e0517a7a2ec6e0ca888074cdc6754fa8b2c974aad156ed976583f681ad8ce8"
+original_class_hash = "0x2e0517a7a2ec6e0ca888074cdc6754fa8b2c974aad156ed976583f681ad8ce8"
+abi = "manifests/dev/abis/deployments/models/chain_monsters_models_index_team.json"
+name = "chain_monsters::models::index::team"
+
+[[models.members]]
+name = "game_id"
+type = "u32"
+key = true
+
+[[models.members]]
+name = "index"
+type = "u8"
+key = true
+
+[[models.members]]
+name = "id"
+type = "felt252"
 key = false

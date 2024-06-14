@@ -7,7 +7,7 @@ edition = "2023_10"
 sierra-replace-ids = true
 
 [scripts]
-migrate = "sozo build && sozo migrate plan && sozo migrate apply"
+deploy = "sozo clean && sozo build && sozo migrate plan && sozo migrate apply"
 
 [dependencies]
 alexandria_math = { git = "https://github.com/keep-starknet-strange/alexandria", rev = "78b0d51" }

@@ -1,0 +1,25 @@
+kind = "DojoModel"
+class_hash = "0x1f49c361ebde434831d24cb1b90c3b4708834246401be8a9a40aeb5a8f4b86b"
+original_class_hash = "0x1f49c361ebde434831d24cb1b90c3b4708834246401be8a9a40aeb5a8f4b86b"
+abi = "manifests/dev/abis/base/models/chain_monsters_models_index_player.json"
+name = "chain_monsters::models::index::player"
+
+[[members]]
+name = "id"
+type = "felt252"
+key = true
+
+[[members]]
+name = "game_id"
+type = "u32"
+key = false
+
+[[members]]
+name = "achievements"
+type = "u64"
+key = false
+
+[[members]]
+name = "name"
+type = "felt252"
+key = false
