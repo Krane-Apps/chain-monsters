@@ -14,9 +14,9 @@ trait IActions<TContractState> {
     fn create(self: @TContractState, world: IWorldDispatcher) -> u32;
     fn join(self: @TContractState, world: IWorldDispatcher, game_id: u32);
     fn ready(self: @TContractState, world: IWorldDispatcher, game_id: u32, status: bool);
-    fn transfer(self: @TContractState, world: IWorldDispatcher, game_id: u32, player_index: u8);
+    fn transfer(self: @TContractState, world: IWorldDispatcher, game_id: u32, team_index: u8);
     fn leave(self: @TContractState, world: IWorldDispatcher, game_id: u32,);
-    fn kick(self: @TContractState, world: IWorldDispatcher, game_id: u32, player_index: u8);
+    fn kick(self: @TContractState, world: IWorldDispatcher, game_id: u32, team_index: u8);
     fn delete(self: @TContractState, world: IWorldDispatcher, game_id: u32,);
     fn start(self: @TContractState, world: IWorldDispatcher, game_id: u32,);
 }
@@ -107,16 +107,16 @@ mod actions {
             self.hostable._ready(world, game_id, status)
         }
 
-        fn transfer(self: @ContractState, world: IWorldDispatcher, game_id: u32, player_index: u8) {
-            self.hostable._transfer(world, game_id, player_index)
+        fn transfer(self: @ContractState, world: IWorldDispatcher, game_id: u32, team_index: u8) {
+            self.hostable._transfer(world, game_id, team_index)
         }
 
         fn leave(self: @ContractState, world: IWorldDispatcher, game_id: u32) {
             self.hostable._leave(world, game_id)
         }
 
-        fn kick(self: @ContractState, world: IWorldDispatcher, game_id: u32, player_index: u8) {
-            self.hostable._kick(world, game_id, player_index)
+        fn kick(self: @ContractState, world: IWorldDispatcher, game_id: u32, team_index: u8) {
+            self.hostable._kick(world, game_id, team_index)
         }
 
         fn delete(self: @ContractState, world: IWorldDispatcher, game_id: u32) {
