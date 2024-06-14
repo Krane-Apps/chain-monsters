@@ -1,75 +1,130 @@
-use dojo_starter::models::moves::Direction;
-use dojo_starter::models::position::Position;
+// Starknet imports
 
-// define the interface
-#[dojo::interface]
-trait IActions {
-    fn spawn();
-    fn move(direction: Direction);
+use starknet::ContractAddress;
+
+// Dojo imports
+
+use dojo::world::IWorldDispatcher;
+
+// Interfaces
+
+#[starknet::interface]
+trait IActions<TContractState> {
+    fn spawn(self: @TContractState, world: IWorldDispatcher, name: felt252,);
+    fn create(self: @TContractState, world: IWorldDispatcher) -> u32;
+    fn join(self: @TContractState, world: IWorldDispatcher, game_id: u32);
+    fn ready(self: @TContractState, world: IWorldDispatcher, game_id: u32, status: bool);
+    fn transfer(self: @TContractState, world: IWorldDispatcher, game_id: u32, player_index: u8);
+    fn leave(self: @TContractState, world: IWorldDispatcher, game_id: u32,);
+    fn kick(self: @TContractState, world: IWorldDispatcher, game_id: u32, player_index: u8);
+    fn delete(self: @TContractState, world: IWorldDispatcher, game_id: u32,);
+    fn start(self: @TContractState, world: IWorldDispatcher, game_id: u32,);
 }
 
-// dojo decorator
-#[dojo::contract]
+// Contracts
+
+#[starknet::contract]
 mod actions {
-    use super::{IActions, next_position};
-    use starknet::{ContractAddress, get_caller_address};
-    use dojo_starter::models::{position::{Position, Vec2}, moves::{Moves, Direction}};
+    // Dojo imports
+
+    use dojo::world;
+    use dojo::world::IWorldDispatcher;
+    use dojo::world::IWorldDispatcherTrait;
+    use dojo::world::IDojoResourceProvider;
+
+    // Component imports
+
+    use chain_monsters::components::initializable::InitializableComponent;
+    use chain_monsters::components::manageable::ManageableComponent;
+    use chain_monsters::components::hostable::HostableComponent;
+
+    // Local imports
+
+    use super::IActions;
+
+    // Components
+
+    component!(path: InitializableComponent, storage: initializable, event: InitializableEvent);
+    #[abi(embed_v0)]
+    impl WorldProviderImpl =
+        InitializableComponent::WorldProviderImpl<ContractState>;
+    #[abi(embed_v0)]
+    impl DojoInitImpl = InitializableComponent::DojoInitImpl<ContractState>;
+    component!(path: ManageableComponent, storage: manageable, event: ManageableEvent);
+    impl ManageableInternalImpl = ManageableComponent::InternalImpl<ContractState>;
+    component!(path: HostableComponent, storage: hostable, event: HostableEvent);
+    impl HostableInternalImpl = HostableComponent::InternalImpl<ContractState>;
+
+    // Storage
+
+    #[storage]
+    struct Storage {
+        #[substorage(v0)]
+        initializable: InitializableComponent::Storage,
+        #[substorage(v0)]
+        manageable: ManageableComponent::Storage,
+        #[substorage(v0)]
+        hostable: HostableComponent::Storage,
+    }
+
+    // Events
+
+    #[event]
+    #[derive(Drop, starknet::Event)]
+    enum Event {
+        #[flat]
+        InitializableEvent: InitializableComponent::Event,
+        #[flat]
+        ManageableEvent: ManageableComponent::Event,
+        #[flat]
+        HostableEvent: HostableComponent::Event,
+    }
+
+    // Implementations
+
+    #[abi(embed_v0)]
+    impl DojoResourceProviderImpl of IDojoResourceProvider<ContractState> {
+        fn dojo_resource(self: @ContractState) -> felt252 {
+            'actions'
+        }
+    }
 
     #[abi(embed_v0)]
     impl ActionsImpl of IActions<ContractState> {
-        fn spawn(world: IWorldDispatcher) {
-            // Get the address of the current caller, possibly the player's address.
-            let player = get_caller_address();
-            // Retrieve the player's current position from the world.
-            let position = get!(world, player, (Position));
-
-            // Update the world state with the new data.
-            // 1. Set the player's remaining moves to 100.
-            // 2. Move the player's position 10 units in both the x and y direction.
-            set!(
-                world,
-                (
-                    Moves { player, remaining: 100, last_direction: Direction::None(()) },
-                    Position {
-                        player, vec: Vec2 { x: position.vec.x + 10, y: position.vec.y + 10 }
-                    },
-                )
-            );
+        fn spawn(self: @ContractState, world: IWorldDispatcher, name: felt252) {
+            self.manageable._spawn(world, name);
         }
 
-        // Implementation of the move function for the ContractState struct.
-        fn move(world: IWorldDispatcher, direction: Direction) {
-            // Get the address of the current caller, possibly the player's address.
-            let player = get_caller_address();
+        fn create(self: @ContractState, world: IWorldDispatcher) -> u32 {
+            self.hostable._create(world)
+        }
 
-            // Retrieve the player's current position and moves data from the world.
-            let (mut position, mut moves) = get!(world, player, (Position, Moves));
+        fn join(self: @ContractState, world: IWorldDispatcher, game_id: u32) {
+            self.hostable._join(world, game_id)
+        }
 
-            // Deduct one from the player's remaining moves.
-            moves.remaining -= 1;
+        fn ready(self: @ContractState, world: IWorldDispatcher, game_id: u32, status: bool) {
+            self.hostable._ready(world, game_id, status)
+        }
 
-            // Update the last direction the player moved in.
-            moves.last_direction = direction;
+        fn transfer(self: @ContractState, world: IWorldDispatcher, game_id: u32, player_index: u8) {
+            self.hostable._transfer(world, game_id, player_index)
+        }
 
-            // Calculate the player's next position based on the provided direction.
-            let next = next_position(position, direction);
+        fn leave(self: @ContractState, world: IWorldDispatcher, game_id: u32) {
+            self.hostable._leave(world, game_id)
+        }
 
-            // Update the world state with the new moves data and position.
-            set!(world, (moves, next));
-            // Emit an event to the world to notify about the player's move.
-            // emit!(world, (moves));
+        fn kick(self: @ContractState, world: IWorldDispatcher, game_id: u32, player_index: u8) {
+            self.hostable._kick(world, game_id, player_index)
+        }
+
+        fn delete(self: @ContractState, world: IWorldDispatcher, game_id: u32) {
+            self.hostable._delete(world, game_id)
+        }
+
+        fn start(self: @ContractState, world: IWorldDispatcher, game_id: u32) {
+            self.hostable._start(world, game_id)
         }
     }
-}
-
-// Define function like this:
-fn next_position(mut position: Position, direction: Direction) -> Position {
-    match direction {
-        Direction::None => { return position; },
-        Direction::Left => { position.vec.x -= 1; },
-        Direction::Right => { position.vec.x += 1; },
-        Direction::Up => { position.vec.y -= 1; },
-        Direction::Down => { position.vec.y += 1; },
-    };
-    position
 }

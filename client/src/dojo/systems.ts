@@ -26,7 +26,7 @@ export function systems({
           label: "View",
           onClick: () =>
             window.open(
-              `https://worlds.dev/networks/slot/worlds/guild-era/txs/${transaction.transaction_hash}`,
+              `https://worlds.dev/networks/slot/worlds/chain-monsters/txs/${transaction.transaction_hash}`,
             ),
         },
       });

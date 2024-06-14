@@ -25,12 +25,12 @@ account_address = "0xb3ff441a68610b30fd5e2abbf3a1548eb6ba6f3559f2862bf2dc757e582
 private_key = "0x2bbf4f9fd0bbb2e60b0316c1fe0b76cf7a4d0198bd493ced9b8df2a3a24d68a"
 
 [profile.slot.tool.dojo.env]
-rpc_url = "https://api.cartridge.gg/x/guild-era/katana"
+rpc_url = "https://api.cartridge.gg/x/chain-monsters/katana"
 account_address = ""
 private_key = ""
 
 [tool.dojo.world]
-name = "zKastle"
+name = "Chain Monsters"
 description = "Action game."
 cover_uri = "file://assets/cover.png"
 icon_uri = "file://assets/icon.png"
