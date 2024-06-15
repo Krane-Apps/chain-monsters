@@ -7,19 +7,44 @@ mod models {
     mod game;
     mod player;
     mod team;
+    mod monster;
+}
+
+mod helpers {
+    mod grid;
+}
+
+mod elements {
+    mod clans {
+        mod interface;
+    // mod goblin;
+    // mod golem;
+    // mod angel;
+    // mod minotaur;
+    }
+
+    mod roles {
+        mod interface;
+    // mod warrior;
+    // mod assassin;
+    // mod paladin;
+    }
 }
 
 mod components {
     mod initializable;
     mod hostable;
     mod manageable;
+    mod playable;
 }
 
 mod systems {
     mod actions;
 }
-// mod tests {
-//     mod test_world;
-// }
 
+#[cfg(test)]
+mod tests {
+    mod setup;
+    mod move;
+}
 

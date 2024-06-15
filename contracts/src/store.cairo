@@ -17,6 +17,7 @@ use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
 use chain_monsters::models::game::{Game, GameTrait};
 use chain_monsters::models::player::{Player, PlayerTrait};
 use chain_monsters::models::team::{Team, TeamTrait};
+use chain_monsters::models::monster::{Monster, MonsterPosition, MonsterTrait, MonsterIntoPosition};
 
 // Errors
 
@@ -49,26 +50,36 @@ impl StoreImpl of StoreTrait {
     }
 
     #[inline(always)]
-    fn team(self: Store, game_id: u32, team_index: u8) -> Team {
-        get!(self.world, (game_id, team_index), (Team))
+    fn monster(self: Store, game_id: u32, team_id: u8, monster_id: u8) -> Monster {
+        get!(self.world, (game_id, team_id, monster_id), (Monster))
     }
 
-    fn search_team(self: Store, game_id: u32, team_id: felt252, mut index: u8) -> Option<Team> {
+    #[inline(always)]
+    fn monster_position(self: Store, game_id: u32, x: u8, y: u8) -> MonsterPosition {
+        get!(self.world, (game_id, x, y), (MonsterPosition))
+    }
+
+    #[inline(always)]
+    fn team(self: Store, game_id: u32, team_id: u8) -> Team {
+        get!(self.world, (game_id, team_id), (Team))
+    }
+
+    fn search_team(self: Store, game_id: u32, player_id: felt252, mut count: u8) -> Option<Team> {
         loop {
-            if index == 0 {
+            if count == 0 {
                 break Option::None;
             }
-            let team = self.team(game_id, index);
-            if team.id == team_id {
+            let team = self.team(game_id, count);
+            if team.player_id == player_id {
                 break Option::Some(team);
             }
-            index -= 1;
+            count -= 1;
         }
     }
 
     #[inline(always)]
-    fn find_team(self: Store, game_id: u32, team_id: felt252, mut index: u8) -> Team {
-        let team = self.search_team(game_id, team_id, index);
+    fn find_team(self: Store, game_id: u32, player_id: felt252, mut count: u8) -> Team {
+        let team = self.search_team(game_id, player_id, count);
         team.expect(errors::STORE_TEAM_NOT_FOUND)
     }
 
@@ -80,7 +91,7 @@ impl StoreImpl of StoreTrait {
                 break;
             }
             let team = self.team(game_id, index);
-            teams.append(team.id);
+            teams.append(team.player_id);
             index -= 1;
         };
         teams
@@ -88,17 +99,24 @@ impl StoreImpl of StoreTrait {
 
     #[inline(always)]
     fn set_player(self: Store, player: Player) {
-        set!(self.world, (player))
+        set!(self.world, (player));
     }
 
     #[inline(always)]
     fn set_game(self: Store, game: Game) {
-        set!(self.world, (game))
+        set!(self.world, (game));
+    }
+
+    #[inline(always)]
+    fn set_monster(self: Store, monster: Monster) {
+        let _position: MonsterPosition = monster.into();
+        set!(self.world, (_position));
+        set!(self.world, (monster));
     }
 
     #[inline(always)]
     fn set_team(self: Store, team: Team) {
-        set!(self.world, (team))
+        set!(self.world, (team));
     }
 
     #[inline(always)]
@@ -107,11 +125,11 @@ impl StoreImpl of StoreTrait {
         self.set_team(team);
         // Skip if the last builder is removed
         let last_index = game.player_count;
-        if team.index == last_index {
+        if team.id == last_index {
             return;
         }
         let mut last_team = self.team(game.id, last_index);
-        last_team.index = team.index;
+        last_team.id = team.id;
         self.set_team(last_team);
         self.set_team(team);
     }

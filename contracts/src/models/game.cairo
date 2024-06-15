@@ -1,5 +1,6 @@
 // Core imports
 
+use core::debug::PrintTrait;
 use core::Zeroable;
 use core::hash::HashStateTrait;
 use core::poseidon::{PoseidonTrait, HashState};
@@ -11,6 +12,7 @@ use origami::random::dice::{Dice, DiceTrait};
 
 // Internal imports
 
+use chain_monsters::constants::DEFAULT_MAX_X;
 use chain_monsters::models::index::Game;
 
 // Constants
@@ -46,7 +48,9 @@ impl GameImpl of GameTrait {
         assert(host != 0, errors::GAME_INVALID_HOST);
 
         // [Return] Default game
-        Game { id, over: false, players: 0, player_count: 0, nonce: 0, seed: 0, host, }
+        Game {
+            id, over: false, players: 0, player_count: 0, positions: 0, nonce: 0, seed: 0, host,
+        }
     }
 
     #[inline(always)]
@@ -58,6 +62,30 @@ impl GameImpl of GameTrait {
     #[inline(always)]
     fn is_ready(self: Game, player_index: u8) -> bool {
         Bitmap::get_bit_at(self.players, player_index - 1)
+    }
+
+    #[inline(always)]
+    fn is_idle(self: Game, x: u8, y: u8) -> bool {
+        let index = x + y * (DEFAULT_MAX_X + 1);
+        !Bitmap::get_bit_at(self.positions, index)
+    }
+
+    #[inline(always)]
+    fn set_positions(ref self: Game, x: u8, y: u8) {
+        let index = x + y * (DEFAULT_MAX_X + 1);
+        self.positions = Bitmap::set_bit_at(self.positions, index, true);
+    }
+
+    #[inline(always)]
+    fn unset_positions(ref self: Game, x: u8, y: u8) {
+        let index = x + y * (DEFAULT_MAX_X + 1);
+        self.positions = Bitmap::set_bit_at(self.positions, index, false);
+    }
+
+    #[inline(always)]
+    fn update_positions(ref self: Game, from_x: u8, from_y: u8, to_x: u8, to_y: u8) {
+        self.unset_positions(from_x, from_y);
+        self.set_positions(to_x, to_y);
     }
 
     #[inline(always)]
@@ -250,7 +278,16 @@ impl AssertImpl of GameAssert {
 impl ZeroableGame of core::Zeroable<Game> {
     #[inline(always)]
     fn zero() -> Game {
-        Game { id: 0, over: false, players: 0, player_count: 0, nonce: 0, seed: 0, host: 0, }
+        Game {
+            id: 0,
+            over: false,
+            players: 0,
+            player_count: 0,
+            positions: 0,
+            nonce: 0,
+            seed: 0,
+            host: 0,
+        }
     }
 
     #[inline(always)]

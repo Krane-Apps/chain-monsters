@@ -14,6 +14,7 @@ struct Game {
     over: bool,
     players: u8,
     player_count: u8,
+    positions: u64,
     nonce: u16,
     seed: felt252,
     host: felt252,
@@ -25,6 +26,35 @@ struct Team {
     #[key]
     game_id: u32,
     #[key]
-    index: u8,
-    id: felt252,
+    id: u8,
+    player_id: felt252,
+}
+
+#[derive(Copy, Drop, Serde, IntrospectPacked)]
+#[dojo::model]
+struct Monster {
+    #[key]
+    game_id: u32,
+    #[key]
+    team_id: u8,
+    #[key]
+    id: u8,
+    health: u8,
+    damage: u8,
+    mana: u8,
+    x: u8,
+    y: u8,
+}
+
+#[derive(Copy, Drop, Serde, IntrospectPacked)]
+#[dojo::model]
+struct MonsterPosition {
+    #[key]
+    game_id: u32,
+    #[key]
+    x: u8,
+    #[key]
+    y: u8,
+    team_id: u8,
+    monster_id: u8,
 }

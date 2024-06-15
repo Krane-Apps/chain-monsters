@@ -12,13 +12,23 @@ use dojo::world::IWorldDispatcher;
 trait IActions<TContractState> {
     fn spawn(self: @TContractState, world: IWorldDispatcher, name: felt252,);
     fn create(self: @TContractState, world: IWorldDispatcher) -> u32;
-    fn join(self: @TContractState, world: IWorldDispatcher, game_id: u32);
-    fn ready(self: @TContractState, world: IWorldDispatcher, game_id: u32, status: bool);
-    fn transfer(self: @TContractState, world: IWorldDispatcher, game_id: u32, team_index: u8);
-    fn leave(self: @TContractState, world: IWorldDispatcher, game_id: u32,);
-    fn kick(self: @TContractState, world: IWorldDispatcher, game_id: u32, team_index: u8);
-    fn delete(self: @TContractState, world: IWorldDispatcher, game_id: u32,);
-    fn start(self: @TContractState, world: IWorldDispatcher, game_id: u32,);
+    // fn join(self: @TContractState, world: IWorldDispatcher, game_id: u32);
+    // fn ready(self: @TContractState, world: IWorldDispatcher, game_id: u32, status: bool);
+    // fn transfer(self: @TContractState, world: IWorldDispatcher, game_id: u32, team_index: u8);
+    // fn leave(self: @TContractState, world: IWorldDispatcher, game_id: u32,);
+    // fn kick(self: @TContractState, world: IWorldDispatcher, game_id: u32, team_index: u8);
+    // fn delete(self: @TContractState, world: IWorldDispatcher, game_id: u32,);
+    // fn start(self: @TContractState, world: IWorldDispatcher, game_id: u32,);
+    fn move(
+        self: @TContractState,
+        world: IWorldDispatcher,
+        game_id: u32,
+        team_id: u8,
+        monster_id: u8,
+        x: u8,
+        y: u8,
+        special: bool
+    );
 }
 
 // Contracts
@@ -37,6 +47,7 @@ mod actions {
     use chain_monsters::components::initializable::InitializableComponent;
     use chain_monsters::components::manageable::ManageableComponent;
     use chain_monsters::components::hostable::HostableComponent;
+    use chain_monsters::components::playable::PlayableComponent;
 
     // Local imports
 
@@ -52,8 +63,10 @@ mod actions {
     impl DojoInitImpl = InitializableComponent::DojoInitImpl<ContractState>;
     component!(path: ManageableComponent, storage: manageable, event: ManageableEvent);
     impl ManageableInternalImpl = ManageableComponent::InternalImpl<ContractState>;
-    component!(path: HostableComponent, storage: hostable, event: HostableEvent);
-    impl HostableInternalImpl = HostableComponent::InternalImpl<ContractState>;
+    // component!(path: HostableComponent, storage: hostable, event: HostableEvent);
+    // impl HostableInternalImpl = HostableComponent::InternalImpl<ContractState>;
+    component!(path: PlayableComponent, storage: playable, event: PlayableEvent);
+    impl PlayableInternalImpl = PlayableComponent::InternalImpl<ContractState>;
 
     // Storage
 
@@ -63,8 +76,10 @@ mod actions {
         initializable: InitializableComponent::Storage,
         #[substorage(v0)]
         manageable: ManageableComponent::Storage,
+        // #[substorage(v0)]
+        // hostable: HostableComponent::Storage,
         #[substorage(v0)]
-        hostable: HostableComponent::Storage,
+        playable: PlayableComponent::Storage,
     }
 
     // Events
@@ -76,8 +91,10 @@ mod actions {
         InitializableEvent: InitializableComponent::Event,
         #[flat]
         ManageableEvent: ManageableComponent::Event,
+        // #[flat]
+        // HostableEvent: HostableComponent::Event,
         #[flat]
-        HostableEvent: HostableComponent::Event,
+        PlayableEvent: PlayableComponent::Event,
     }
 
     // Implementations
@@ -95,36 +112,54 @@ mod actions {
             self.manageable._spawn(world, name);
         }
 
+        // fn create(self: @ContractState, world: IWorldDispatcher) -> u32 {
+        //     self.hostable._create(world)
+        // }
+
+        // fn join(self: @ContractState, world: IWorldDispatcher, game_id: u32) {
+        //     self.hostable._join(world, game_id)
+        // }
+
+        // fn ready(self: @ContractState, world: IWorldDispatcher, game_id: u32, status: bool) {
+        //     self.hostable._ready(world, game_id, status)
+        // }
+
+        // fn transfer(self: @ContractState, world: IWorldDispatcher, game_id: u32, team_index: u8)
+        // {
+        //     self.hostable._transfer(world, game_id, team_index)
+        // }
+
+        // fn leave(self: @ContractState, world: IWorldDispatcher, game_id: u32) {
+        //     self.hostable._leave(world, game_id)
+        // }
+
+        // fn kick(self: @ContractState, world: IWorldDispatcher, game_id: u32, team_index: u8) {
+        //     self.hostable._kick(world, game_id, team_index)
+        // }
+
+        // fn delete(self: @ContractState, world: IWorldDispatcher, game_id: u32) {
+        //     self.hostable._delete(world, game_id)
+        // }
+
+        // fn start(self: @ContractState, world: IWorldDispatcher, game_id: u32) {
+        //     self.hostable._start(world, game_id)
+        // }
+
         fn create(self: @ContractState, world: IWorldDispatcher) -> u32 {
-            self.hostable._create(world)
+            self.playable._create(world)
         }
 
-        fn join(self: @ContractState, world: IWorldDispatcher, game_id: u32) {
-            self.hostable._join(world, game_id)
-        }
-
-        fn ready(self: @ContractState, world: IWorldDispatcher, game_id: u32, status: bool) {
-            self.hostable._ready(world, game_id, status)
-        }
-
-        fn transfer(self: @ContractState, world: IWorldDispatcher, game_id: u32, team_index: u8) {
-            self.hostable._transfer(world, game_id, team_index)
-        }
-
-        fn leave(self: @ContractState, world: IWorldDispatcher, game_id: u32) {
-            self.hostable._leave(world, game_id)
-        }
-
-        fn kick(self: @ContractState, world: IWorldDispatcher, game_id: u32, team_index: u8) {
-            self.hostable._kick(world, game_id, team_index)
-        }
-
-        fn delete(self: @ContractState, world: IWorldDispatcher, game_id: u32) {
-            self.hostable._delete(world, game_id)
-        }
-
-        fn start(self: @ContractState, world: IWorldDispatcher, game_id: u32) {
-            self.hostable._start(world, game_id)
+        fn move(
+            self: @ContractState,
+            world: IWorldDispatcher,
+            game_id: u32,
+            team_id: u8,
+            monster_id: u8,
+            x: u8,
+            y: u8,
+            special: bool
+        ) {
+            self.playable._move(world, game_id, team_id, monster_id, x, y, special)
         }
     }
 }
