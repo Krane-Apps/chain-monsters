@@ -2,8 +2,8 @@ import "./App.css";
 import { Account } from "./ui/components/Account";
 import { Spawn } from "./ui/actions/Spawn";
 import { Create } from "./ui/actions/Create";
-import { Games } from "./ui/containers/Games";
-import { Start } from "./ui/actions/Start";
+import { Monsters } from "./ui/containers/Monsters";
+import { Move } from "./ui/actions/Move";
 
 function App() {
   return (
@@ -12,8 +12,8 @@ function App() {
       <Account />
       <Spawn />
       <Create />
-      <Games />
-      <Start gameId={1} />
+      <Monsters />
+      <Move />
     </div>
   );
 }

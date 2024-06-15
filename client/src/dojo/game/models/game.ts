@@ -5,6 +5,7 @@ export class Game {
   public over: boolean;
   public players: number;
   public player_count: number;
+  public positions: string;
   public nonce: number;
   public seed: string;
   public host: string;
@@ -14,6 +15,7 @@ export class Game {
     this.over = game.over;
     this.players = game.players;
     this.player_count = game.player_count;
+    this.positions = game.positions;
     this.nonce = game.nonce;
     this.seed = game.seed;
     this.host = `0x${game.host.toString(16)}`;

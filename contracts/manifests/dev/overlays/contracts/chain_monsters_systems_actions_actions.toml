@@ -1,5 +1,5 @@
 computed = [  ]
 name = "chain_monsters::systems::actions::actions"
 reads = [  ]
-writes = [ "Player", "Game", "Team" ]
+writes = [ "Player", "Game", "Team", "Monster", "MonsterPosition" ]
 init_calldata = [  ]

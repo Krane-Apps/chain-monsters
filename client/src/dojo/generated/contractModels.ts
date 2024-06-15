@@ -16,6 +16,7 @@ export function defineContractComponents(world: World) {
           over: RecsType.Boolean,
           players: RecsType.Number,
           player_count: RecsType.Number,
+          positions: RecsType.BigInt,
           nonce: RecsType.Number,
           seed: RecsType.BigInt,
           host: RecsType.BigInt,
@@ -23,7 +24,58 @@ export function defineContractComponents(world: World) {
         {
           metadata: {
             name: "Game",
-            types: ["u32", "bool", "u8", "u8", "u16", "felt252", "felt252"],
+            types: [
+              "u32",
+              "bool",
+              "u8",
+              "u8",
+              "u64",
+              "u16",
+              "felt252",
+              "felt252",
+            ],
+            customTypes: [],
+          },
+        },
+      );
+    })(),
+    Monster: (() => {
+      return defineComponent(
+        world,
+        {
+          game_id: RecsType.Number,
+          team_id: RecsType.Number,
+          id: RecsType.Number,
+          health: RecsType.Number,
+          damage: RecsType.Number,
+          mana: RecsType.Number,
+          x: RecsType.Number,
+          y: RecsType.Number,
+        },
+        {
+          metadata: {
+            name: "Monster",
+            types: ["u32", "u8", "u8", "u8", "u8", "u8", "u8", "u8"],
+            customTypes: [],
+          },
+        },
+      );
+    })(),
+    MonsterPosition: (() => {
+      return defineComponent(
+        world,
+        {
+          game_id: RecsType.Number,
+          x: RecsType.Number,
+          y: RecsType.Number,
+          team_id: RecsType.Number,
+          monster_id: RecsType.Number,
+        },
+        {
+          metadata: {
+            name: "MonsterPosition",
+            types: ["u32", "u8", "u8", "u8", "u8"],
+            customTypes: [],
           },
         },
       );
@@ -33,12 +85,14 @@ export function defineContractComponents(world: World) {
         world,
         {
           id: RecsType.BigInt,
+          game_id: RecsType.Number,
           name: RecsType.BigInt,
         },
         {
           metadata: {
             name: "Player",
-            types: ["felt252", "felt252"],
+            types: ["felt252", "u32", "felt252"],
+            customTypes: [],
           },
         },
       );
@@ -48,13 +102,14 @@ export function defineContractComponents(world: World) {
         world,
         {
           game_id: RecsType.Number,
-          index: RecsType.Number,
-          id: RecsType.BigInt,
+          id: RecsType.Number,
+          player_id: RecsType.BigInt,
         },
         {
           metadata: {
             name: "Team",
             types: ["u32", "u8", "felt252"],
+            customTypes: [],
           },
         },
       );

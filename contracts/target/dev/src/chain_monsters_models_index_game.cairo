@@ -1,11 +1,11 @@
 impl GameIntrospect<> of dojo::database::introspect::Introspect<Game<>> {
     #[inline(always)]
     fn size() -> Option<usize> {
-        Option::Some(6)
+        Option::Some(7)
     }
 
     fn layout() -> dojo::database::introspect::Layout {
-        dojo::database::introspect::Layout::Fixed(array![1, 8, 8, 16, 251, 251].span())
+        dojo::database::introspect::Layout::Fixed(array![1, 8, 8, 64, 16, 251, 251].span())
     }
 
     #[inline(always)]
@@ -34,6 +34,11 @@ impl GameIntrospect<> of dojo::database::introspect::Introspect<Game<>> {
                         name: 'player_count',
                         attrs: array![].span(),
                         ty: dojo::database::introspect::Introspect::<u8>::ty()
+                    },
+                    dojo::database::introspect::Member {
+                        name: 'positions',
+                        attrs: array![].span(),
+                        ty: dojo::database::introspect::Introspect::<u64>::ty()
                     },
                     dojo::database::introspect::Member {
                         name: 'nonce',
@@ -121,6 +126,7 @@ impl GameModel of dojo::model::Model<Game> {
         core::serde::Serde::serialize(self.over, ref serialized);
         core::serde::Serde::serialize(self.players, ref serialized);
         core::serde::Serde::serialize(self.player_count, ref serialized);
+        core::serde::Serde::serialize(self.positions, ref serialized);
         core::serde::Serde::serialize(self.nonce, ref serialized);
         core::array::ArrayTrait::append(ref serialized, *self.seed);
         core::array::ArrayTrait::append(ref serialized, *self.host);

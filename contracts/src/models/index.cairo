@@ -3,6 +3,7 @@
 struct Player {
     #[key]
     id: felt252,
+    game_id: u32,
     name: felt252,
 }
 

@@ -65,6 +65,7 @@ mod PlayableComponent {
             // [Effect] Create a new Game
             let game_id = world.uuid() + 1;
             let mut game = GameTrait::new(id: game_id, host: player.id);
+            player.game_id = game.id;
 
             // [Effect] Create a new Team and Monsters
             let team_id = game.join();
@@ -102,6 +103,9 @@ mod PlayableComponent {
             let mut teams = store.teams(game.id, game.player_count);
             game.start(ref teams);
             store.set_game(game);
+
+            // [Effect] Update player
+            store.set_player(player);
 
             // [Return] Game id
             game_id

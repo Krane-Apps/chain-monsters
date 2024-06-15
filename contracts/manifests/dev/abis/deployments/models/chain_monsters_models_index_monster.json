@@ -319,30 +319,50 @@
   },
   {
     "type": "impl",
-    "name": "teamImpl",
-    "interface_name": "chain_monsters::models::index::Iteam"
+    "name": "monsterImpl",
+    "interface_name": "chain_monsters::models::index::Imonster"
   },
   {
     "type": "struct",
-    "name": "chain_monsters::models::index::Team",
+    "name": "chain_monsters::models::index::Monster",
     "members": [
       {
         "name": "game_id",
         "type": "core::integer::u32"
       },
       {
+        "name": "team_id",
+        "type": "core::integer::u8"
+      },
+      {
         "name": "id",
         "type": "core::integer::u8"
       },
       {
-        "name": "player_id",
-        "type": "core::felt252"
+        "name": "health",
+        "type": "core::integer::u8"
+      },
+      {
+        "name": "damage",
+        "type": "core::integer::u8"
+      },
+      {
+        "name": "mana",
+        "type": "core::integer::u8"
+      },
+      {
+        "name": "x",
+        "type": "core::integer::u8"
+      },
+      {
+        "name": "y",
+        "type": "core::integer::u8"
       }
     ]
   },
   {
     "type": "interface",
-    "name": "chain_monsters::models::index::Iteam",
+    "name": "chain_monsters::models::index::Imonster",
     "items": [
       {
         "type": "function",
@@ -350,7 +370,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "chain_monsters::models::index::Team"
+            "type": "chain_monsters::models::index::Monster"
           }
         ],
         "outputs": [],
@@ -360,7 +380,7 @@
   },
   {
     "type": "event",
-    "name": "chain_monsters::models::index::team::Event",
+    "name": "chain_monsters::models::index::monster::Event",
     "kind": "enum",
     "variants": []
   }

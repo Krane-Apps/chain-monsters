@@ -18,6 +18,7 @@ mod errors {
     const MONSTER_NOT_ALIVE: felt252 = 'Monster: not alive';
     const MONSTER_INVALID_TEAM: felt252 = 'Monster: invalid team';
     const MONSTER_ALREADY_DEAD: felt252 = 'Monster: already dead';
+    const MONSTER_NOT_ENOUGH_MANA: felt252 = 'Monster: not enough mana';
 }
 
 #[generate_trait]
@@ -52,6 +53,7 @@ impl MonsterImpl of MonsterTrait {
         self.asset_is_attackable(target);
         // [Effect] Attack target
         let damage = if special {
+            self.assert_is_full();
             self.mana = 0;
             self.damage * 2
         } else {
@@ -112,6 +114,11 @@ impl AssertImpl of MonsterAssert {
     fn asset_is_attackable(self: Monster, target: Monster) {
         assert(self.team_id != target.team_id, errors::MONSTER_INVALID_TEAM);
         assert(target.health != 0, errors::MONSTER_ALREADY_DEAD);
+    }
+
+    #[inline(always)]
+    fn assert_is_full(self: Monster) {
+        assert(self.mana == DEFAULT_MAX_MANA, errors::MONSTER_NOT_ENOUGH_MANA);
     }
 }
 

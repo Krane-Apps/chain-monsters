@@ -1,6 +1,6 @@
 kind = "DojoModel"
-class_hash = "0x11ad5627f8e26d3d40a7ee7ec0fec03fc117c8a47479a343a62679975c1cf34"
-original_class_hash = "0x11ad5627f8e26d3d40a7ee7ec0fec03fc117c8a47479a343a62679975c1cf34"
+class_hash = "0x68c8bed975b3703aa77d7feedee2cbb439cad5a7de5635eb997e30627d9c671"
+original_class_hash = "0x68c8bed975b3703aa77d7feedee2cbb439cad5a7de5635eb997e30627d9c671"
 abi = "manifests/dev/abis/base/models/chain_monsters_models_index_player.json"
 name = "chain_monsters::models::index::player"
 
@@ -8,6 +8,11 @@ name = "chain_monsters::models::index::player"
 name = "id"
 type = "felt252"
 key = true
+
+[[members]]
+name = "game_id"
+type = "u32"
+key = false
 
 [[members]]
 name = "name"

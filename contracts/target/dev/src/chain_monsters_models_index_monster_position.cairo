@@ -1,34 +1,44 @@
-impl PlayerIntrospect<> of dojo::database::introspect::Introspect<Player<>> {
+impl MonsterPositionIntrospect<> of dojo::database::introspect::Introspect<MonsterPosition<>> {
     #[inline(always)]
     fn size() -> Option<usize> {
         Option::Some(2)
     }
 
     fn layout() -> dojo::database::introspect::Layout {
-        dojo::database::introspect::Layout::Fixed(array![32, 251].span())
+        dojo::database::introspect::Layout::Fixed(array![8, 8].span())
     }
 
     #[inline(always)]
     fn ty() -> dojo::database::introspect::Ty {
         dojo::database::introspect::Ty::Struct(
             dojo::database::introspect::Struct {
-                name: 'Player',
+                name: 'MonsterPosition',
                 attrs: array![].span(),
                 children: array![
                     dojo::database::introspect::Member {
-                        name: 'id',
-                        attrs: array!['key'].span(),
-                        ty: dojo::database::introspect::Introspect::<felt252>::ty()
-                    },
-                    dojo::database::introspect::Member {
                         name: 'game_id',
-                        attrs: array![].span(),
+                        attrs: array!['key'].span(),
                         ty: dojo::database::introspect::Introspect::<u32>::ty()
                     },
                     dojo::database::introspect::Member {
-                        name: 'name',
+                        name: 'x',
+                        attrs: array!['key'].span(),
+                        ty: dojo::database::introspect::Introspect::<u8>::ty()
+                    },
+                    dojo::database::introspect::Member {
+                        name: 'y',
+                        attrs: array!['key'].span(),
+                        ty: dojo::database::introspect::Introspect::<u8>::ty()
+                    },
+                    dojo::database::introspect::Member {
+                        name: 'team_id',
                         attrs: array![].span(),
-                        ty: dojo::database::introspect::Introspect::<felt252>::ty()
+                        ty: dojo::database::introspect::Introspect::<u8>::ty()
+                    },
+                    dojo::database::introspect::Member {
+                        name: 'monster_id',
+                        attrs: array![].span(),
+                        ty: dojo::database::introspect::Introspect::<u8>::ty()
                     }
                 ]
                     .span()
@@ -37,15 +47,15 @@ impl PlayerIntrospect<> of dojo::database::introspect::Introspect<Player<>> {
     }
 }
 
-impl PlayerModel of dojo::model::Model<Player> {
+impl MonsterPositionModel of dojo::model::Model<MonsterPosition> {
     fn entity(
         world: dojo::world::IWorldDispatcher,
         keys: Span<felt252>,
         layout: dojo::database::introspect::Layout
-    ) -> Player {
+    ) -> MonsterPosition {
         let values = dojo::world::IWorldDispatcherTrait::entity(
             world,
-            711011379911436309259372467342761500657237775100998141763491044473508065524,
+            392187848571380253511968103739358582048064862982321444795042221668756615203,
             keys,
             layout
         );
@@ -57,20 +67,20 @@ impl PlayerModel of dojo::model::Model<Player> {
         core::array::serialize_array_helper(values, ref serialized);
         let mut serialized = core::array::ArrayTrait::span(@serialized);
 
-        let entity = core::serde::Serde::<Player>::deserialize(ref serialized);
+        let entity = core::serde::Serde::<MonsterPosition>::deserialize(ref serialized);
 
-        if core::option::OptionTrait::<Player>::is_none(@entity) {
+        if core::option::OptionTrait::<MonsterPosition>::is_none(@entity) {
             panic!(
-                "Model `Player`: deserialization failed. Ensure the length of the keys tuple is matching the number of #[key] fields in the model struct."
+                "Model `MonsterPosition`: deserialization failed. Ensure the length of the keys tuple is matching the number of #[key] fields in the model struct."
             );
         }
 
-        core::option::OptionTrait::<Player>::unwrap(entity)
+        core::option::OptionTrait::<MonsterPosition>::unwrap(entity)
     }
 
     #[inline(always)]
     fn name() -> ByteArray {
-        "Player"
+        "MonsterPosition"
     }
 
     #[inline(always)]
@@ -80,36 +90,38 @@ impl PlayerModel of dojo::model::Model<Player> {
 
     #[inline(always)]
     fn selector() -> felt252 {
-        711011379911436309259372467342761500657237775100998141763491044473508065524
+        392187848571380253511968103739358582048064862982321444795042221668756615203
     }
 
     #[inline(always)]
-    fn instance_selector(self: @Player) -> felt252 {
+    fn instance_selector(self: @MonsterPosition) -> felt252 {
         Self::selector()
     }
 
     #[inline(always)]
-    fn keys(self: @Player) -> Span<felt252> {
+    fn keys(self: @MonsterPosition) -> Span<felt252> {
         let mut serialized = core::array::ArrayTrait::new();
-        core::array::ArrayTrait::append(ref serialized, *self.id);
+        core::serde::Serde::serialize(self.game_id, ref serialized);
+        core::serde::Serde::serialize(self.x, ref serialized);
+        core::serde::Serde::serialize(self.y, ref serialized);
         core::array::ArrayTrait::span(@serialized)
     }
 
     #[inline(always)]
-    fn values(self: @Player) -> Span<felt252> {
+    fn values(self: @MonsterPosition) -> Span<felt252> {
         let mut serialized = core::array::ArrayTrait::new();
-        core::serde::Serde::serialize(self.game_id, ref serialized);
-        core::array::ArrayTrait::append(ref serialized, *self.name);
+        core::serde::Serde::serialize(self.team_id, ref serialized);
+        core::serde::Serde::serialize(self.monster_id, ref serialized);
         core::array::ArrayTrait::span(@serialized)
     }
 
     #[inline(always)]
     fn layout() -> dojo::database::introspect::Layout {
-        dojo::database::introspect::Introspect::<Player>::layout()
+        dojo::database::introspect::Introspect::<MonsterPosition>::layout()
     }
 
     #[inline(always)]
-    fn instance_layout(self: @Player) -> dojo::database::introspect::Layout {
+    fn instance_layout(self: @MonsterPosition) -> dojo::database::introspect::Layout {
         Self::layout()
     }
 
@@ -132,14 +144,14 @@ impl PlayerModel of dojo::model::Model<Player> {
 }
 
 #[starknet::interface]
-trait Iplayer<T> {
-    fn ensure_abi(self: @T, model: Player);
+trait Imonster_position<T> {
+    fn ensure_abi(self: @T, model: MonsterPosition);
 }
 
 #[starknet::contract]
-mod player {
-    use super::Player;
-    use super::Iplayer;
+mod monster_position {
+    use super::MonsterPosition;
+    use super::Imonster_position;
 
     #[storage]
     struct Storage {}
@@ -147,36 +159,36 @@ mod player {
     #[abi(embed_v0)]
     impl DojoModelImpl of dojo::model::IModel<ContractState> {
         fn selector(self: @ContractState) -> felt252 {
-            dojo::model::Model::<Player>::selector()
+            dojo::model::Model::<MonsterPosition>::selector()
         }
 
         fn name(self: @ContractState) -> ByteArray {
-            dojo::model::Model::<Player>::name()
+            dojo::model::Model::<MonsterPosition>::name()
         }
 
         fn version(self: @ContractState) -> u8 {
-            dojo::model::Model::<Player>::version()
+            dojo::model::Model::<MonsterPosition>::version()
         }
 
         fn unpacked_size(self: @ContractState) -> Option<usize> {
-            dojo::database::introspect::Introspect::<Player>::size()
+            dojo::database::introspect::Introspect::<MonsterPosition>::size()
         }
 
         fn packed_size(self: @ContractState) -> Option<usize> {
-            dojo::model::Model::<Player>::packed_size()
+            dojo::model::Model::<MonsterPosition>::packed_size()
         }
 
         fn layout(self: @ContractState) -> dojo::database::introspect::Layout {
-            dojo::model::Model::<Player>::layout()
+            dojo::model::Model::<MonsterPosition>::layout()
         }
 
         fn schema(self: @ContractState) -> dojo::database::introspect::Ty {
-            dojo::database::introspect::Introspect::<Player>::ty()
+            dojo::database::introspect::Introspect::<MonsterPosition>::ty()
         }
     }
 
     #[abi(embed_v0)]
-    impl playerImpl of Iplayer<ContractState> {
-        fn ensure_abi(self: @ContractState, model: Player) {}
+    impl monster_positionImpl of Imonster_position<ContractState> {
+        fn ensure_abi(self: @ContractState, model: MonsterPosition) {}
     }
 }

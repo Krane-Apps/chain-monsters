@@ -357,6 +357,10 @@
         "type": "core::integer::u8"
       },
       {
+        "name": "positions",
+        "type": "core::integer::u64"
+      },
+      {
         "name": "nonce",
         "type": "core::integer::u16"
       },

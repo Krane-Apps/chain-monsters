@@ -1,6 +1,6 @@
 kind = "DojoModel"
-class_hash = "0x50db134100615e1bdc7bbce17585d80e25bb81ff852ce43e9143a92152a45f8"
-original_class_hash = "0x50db134100615e1bdc7bbce17585d80e25bb81ff852ce43e9143a92152a45f8"
+class_hash = "0x325cddb5fd2afa0d85dbea43058ec6c0d4740e9f98b49ec9e39f2f34ba1737f"
+original_class_hash = "0x325cddb5fd2afa0d85dbea43058ec6c0d4740e9f98b49ec9e39f2f34ba1737f"
 abi = "manifests/dev/abis/base/models/chain_monsters_models_index_game.json"
 name = "chain_monsters::models::index::game"
 
@@ -22,6 +22,11 @@ key = false
 [[members]]
 name = "player_count"
 type = "u8"
+key = false
+
+[[members]]
+name = "positions"
+type = "u64"
 key = false
 
 [[members]]

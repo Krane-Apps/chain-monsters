@@ -71,141 +71,160 @@ export function systems({
     }
   };
 
-  const join = async ({ account, ...props }: SystemTypes.Join) => {
+  // const join = async ({ account, ...props }: SystemTypes.Join) => {
+  //   try {
+  //     const { transaction_hash } = await client.actions.join({
+  //       account,
+  //       ...props,
+  //     });
+
+  //     notify(
+  //       `Game has been joined.`,
+  //       await account.waitForTransaction(transaction_hash, {
+  //         retryInterval: 100,
+  //       }),
+  //     );
+  //   } catch (error) {
+  //     console.error("Error joining game:", error);
+  //   }
+  // };
+
+  // const ready = async ({ account, ...props }: SystemTypes.Ready) => {
+  //   try {
+  //     const { transaction_hash } = await client.actions.ready({
+  //       account,
+  //       ...props,
+  //     });
+
+  //     notify(
+  //       `Player updates his status.`,
+  //       await account.waitForTransaction(transaction_hash, {
+  //         retryInterval: 100,
+  //       }),
+  //     );
+  //   } catch (error) {
+  //     console.error("Error setting ready status:", error);
+  //   }
+  // };
+
+  // const transfer = async ({ account, ...props }: SystemTypes.Transfer) => {
+  //   try {
+  //     const { transaction_hash } = await client.actions.transfer({
+  //       account,
+  //       ...props,
+  //     });
+
+  //     notify(
+  //       `Host role has been transfered.`,
+  //       await account.waitForTransaction(transaction_hash, {
+  //         retryInterval: 100,
+  //       }),
+  //     );
+  //   } catch (error) {
+  //     console.error("Error transferring ownership:", error);
+  //   }
+  // };
+
+  // const leave = async ({ account, ...props }: SystemTypes.Leave) => {
+  //   try {
+  //     const { transaction_hash } = await client.actions.leave({
+  //       account,
+  //       ...props,
+  //     });
+
+  //     notify(
+  //       `Game has been left.`,
+  //       await account.waitForTransaction(transaction_hash, {
+  //         retryInterval: 100,
+  //       }),
+  //     );
+  //   } catch (error) {
+  //     console.error("Error leaving game:", error);
+  //   }
+  // };
+
+  // const kick = async ({ account, ...props }: SystemTypes.Kick) => {
+  //   try {
+  //     const { transaction_hash } = await client.actions.kick({
+  //       account,
+  //       ...props,
+  //     });
+
+  //     notify(
+  //       `Player has been kicked.`,
+  //       await account.waitForTransaction(transaction_hash, {
+  //         retryInterval: 100,
+  //       }),
+  //     );
+  //   } catch (error) {
+  //     console.error("Error kicking player:", error);
+  //   }
+  // };
+
+  // const remove = async ({ account, ...props }: SystemTypes.Remove) => {
+  //   try {
+  //     const { transaction_hash } = await client.actions.remove({
+  //       account,
+  //       ...props,
+  //     });
+
+  //     notify(
+  //       `Game has been deleted.`,
+  //       await account.waitForTransaction(transaction_hash, {
+  //         retryInterval: 100,
+  //       }),
+  //     );
+  //   } catch (error) {
+  //     console.error("Error deleting game:", error);
+  //   }
+  // };
+
+  // const start = async ({ account, ...props }: SystemTypes.Start) => {
+  //   try {
+  //     const { transaction_hash } = await client.actions.start({
+  //       account,
+  //       ...props,
+  //     });
+
+  //     notify(
+  //       `Game has started.`,
+  //       await account.waitForTransaction(transaction_hash, {
+  //         retryInterval: 100,
+  //       }),
+  //     );
+  //   } catch (error) {
+  //     console.error("Error starting game:", error);
+  //   }
+  // };
+
+  const move = async ({ account, ...props }: SystemTypes.Move) => {
     try {
-      const { transaction_hash } = await client.actions.join({
+      const { transaction_hash } = await client.actions.move({
         account,
         ...props,
       });
 
       notify(
-        `Game has been joined.`,
+        `Player has moved.`,
         await account.waitForTransaction(transaction_hash, {
           retryInterval: 100,
         }),
       );
     } catch (error) {
-      console.error("Error joining game:", error);
-    }
-  };
-
-  const ready = async ({ account, ...props }: SystemTypes.Ready) => {
-    try {
-      const { transaction_hash } = await client.actions.ready({
-        account,
-        ...props,
-      });
-
-      notify(
-        `Player updates his status.`,
-        await account.waitForTransaction(transaction_hash, {
-          retryInterval: 100,
-        }),
-      );
-    } catch (error) {
-      console.error("Error setting ready status:", error);
-    }
-  };
-
-  const transfer = async ({ account, ...props }: SystemTypes.Transfer) => {
-    try {
-      const { transaction_hash } = await client.actions.transfer({
-        account,
-        ...props,
-      });
-
-      notify(
-        `Host role has been transfered.`,
-        await account.waitForTransaction(transaction_hash, {
-          retryInterval: 100,
-        }),
-      );
-    } catch (error) {
-      console.error("Error transferring ownership:", error);
-    }
-  };
-
-  const leave = async ({ account, ...props }: SystemTypes.Leave) => {
-    try {
-      const { transaction_hash } = await client.actions.leave({
-        account,
-        ...props,
-      });
-
-      notify(
-        `Game has been left.`,
-        await account.waitForTransaction(transaction_hash, {
-          retryInterval: 100,
-        }),
-      );
-    } catch (error) {
-      console.error("Error leaving game:", error);
-    }
-  };
-
-  const kick = async ({ account, ...props }: SystemTypes.Kick) => {
-    try {
-      const { transaction_hash } = await client.actions.kick({
-        account,
-        ...props,
-      });
-
-      notify(
-        `Player has been kicked.`,
-        await account.waitForTransaction(transaction_hash, {
-          retryInterval: 100,
-        }),
-      );
-    } catch (error) {
-      console.error("Error kicking player:", error);
-    }
-  };
-
-  const remove = async ({ account, ...props }: SystemTypes.Remove) => {
-    try {
-      const { transaction_hash } = await client.actions.remove({
-        account,
-        ...props,
-      });
-
-      notify(
-        `Game has been deleted.`,
-        await account.waitForTransaction(transaction_hash, {
-          retryInterval: 100,
-        }),
-      );
-    } catch (error) {
-      console.error("Error deleting game:", error);
-    }
-  };
-
-  const start = async ({ account, ...props }: SystemTypes.Start) => {
-    try {
-      const { transaction_hash } = await client.actions.start({
-        account,
-        ...props,
-      });
-
-      notify(
-        `Game has started.`,
-        await account.waitForTransaction(transaction_hash, {
-          retryInterval: 100,
-        }),
-      );
-    } catch (error) {
-      console.error("Error starting game:", error);
+      console.error("Error moving player:", error);
     }
   };
 
   return {
     spawn,
     create,
-    join,
-    ready,
-    transfer,
-    leave,
-    kick,
-    remove,
-    start,
+    // join,
+    // ready,
+    // transfer,
+    // leave,
+    // kick,
+    // remove,
+    // start,
+    move,
   };
 }
