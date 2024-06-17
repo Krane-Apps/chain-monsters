@@ -1,26 +1,49 @@
-import "./App.css";
-import { Account } from "./ui/components/Account";
-import { Spawn } from "./ui/actions/Spawn";
-import { Create } from "./ui/actions/Create";
-import { Monsters } from "./ui/containers/Monsters";
-import { Move } from "./ui/actions/Move";
+import { useState } from "react";
+import { Box, Container } from "@mui/material";
 import { MonsterSelection } from "./components/monster-selection";
 import { SelectedCharacter } from "./helpers/types";
+import IntroScreen from "./components/intro-screen";
+import { GameGrid } from "./components/game-grid";
+import background from "./assets/backgrounds/game_background.png";
+import "./App.css";
 
 function App() {
-  const handleConfirm = (selectedCharacters: SelectedCharacter[]) => {
-    console.log("Selected Characters:", selectedCharacters);
+  const [gameState, setGameState] = useState<string>("intro");
+  const [selectedCharacters, setSelectedCharacters] = useState<
+    SelectedCharacter[]
+  >([]);
+
+  const handleStart = () => {
+    setGameState("selection");
   };
+
+  const handleConfirm = (characters: SelectedCharacter[]) => {
+    setSelectedCharacters(characters);
+    setGameState("game"); // Set game state to "game"
+  };
+
   return (
-    <div className="flex flex-col gap-4">
-      <h1>Chain Monsters</h1>
-      <Account />
-      <Spawn />
-      <Create />
-      <Monsters />
-      <Move />
-      <MonsterSelection onConfirm={handleConfirm} />
-    </div>
+    <Box
+      sx={{
+        backgroundImage: `url(${background})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <Container>
+        {gameState === "intro" && <IntroScreen onStart={handleStart} />}
+        {gameState === "selection" && (
+          <MonsterSelection onConfirm={handleConfirm} />
+        )}
+        {gameState === "game" && (
+          <GameGrid selectedCharacters={selectedCharacters} />
+        )}
+      </Container>
+    </Box>
   );
 }
 

@@ -1,23 +1,19 @@
-"use client";
 import React, { useState } from "react";
 import {
   Box,
   Typography,
-  Button,
   Grid,
   Card,
   CardMedia,
   CardContent,
+  Button,
 } from "@mui/material";
 import { characters } from "@/helpers/constants";
-import { Character } from "@/helpers/types";
-import background from "../assets/backgrounds/selection_background.png";
+import { Character, SelectedCharacter } from "@/helpers/types";
 
 interface MonsterSelectionProps {
   onConfirm: (selectedCharacters: SelectedCharacter[]) => void;
 }
-
-type SelectedCharacter = Character;
 
 export const MonsterSelection: React.FC<MonsterSelectionProps> = ({
   onConfirm,
@@ -58,7 +54,7 @@ export const MonsterSelection: React.FC<MonsterSelectionProps> = ({
       sx={{
         textAlign: "center",
         p: 2,
-        backgroundImage: `url(${background})`,
+        backgroundImage: `url(../assets/backgrounds/selection_background.png)`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         minHeight: "100vh",
@@ -79,7 +75,7 @@ export const MonsterSelection: React.FC<MonsterSelectionProps> = ({
               onMouseLeave={() => setHoveredCharacterId(null)}
               sx={{
                 border: selectedCharacters.some((c) => c.id === character.id)
-                  ? "6px solid green"
+                  ? "6px solid red"
                   : "6px solid transparent",
                 cursor: "pointer",
                 transition: "border 0.3s",
