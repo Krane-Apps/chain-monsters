@@ -1,31 +1,24 @@
 import { useState } from "react";
 import { Box, Container } from "@mui/material";
-import { MonsterSelection } from "./components/monster-selection";
-import { SelectedCharacter } from "./helpers/types";
 import IntroScreen from "./components/intro-screen";
 import { GameGrid } from "./components/game-grid";
 import background from "./assets/backgrounds/game_background.png";
 import "./App.css";
-import { Account } from "./ui/components/Account";
-import { Spawn } from "./ui/actions/Spawn";
+import { useGame } from "./hooks/useGame";
+import { useDojo } from "./dojo/useDojo";
+import { usePlayer } from "./hooks/usePlayer";
 import { Create } from "./ui/actions/Create";
-import { Monsters } from "./ui/containers/Monsters";
-import { Move } from "./ui/actions/Move";
 
 function App() {
-  // const [gameState, setGameState] = useState<string>("intro");
-  // const [selectedCharacters, setSelectedCharacters] = useState<
-  //   SelectedCharacter[]
-  // >([]);
-
-  // const handleStart = () => {
-  //   setGameState("selection");
-  // };
-
-  // const handleConfirm = (characters: SelectedCharacter[]) => {
-  //   setSelectedCharacters(characters);
-  //   setGameState("game");
-  // };
+  const {
+    account: { account },
+    master,
+    setup: {
+      systemCalls: { move },
+    },
+  } = useDojo();
+  const { player } = usePlayer({ playerId: account.address });
+  const { game } = useGame({ gameId: player?.game_id || 0 });
 
   return (
     <Box
@@ -40,13 +33,8 @@ function App() {
       }}
     >
       <Container>
-        <h1>Chain Monsters</h1>
-        <Account />
-        <Spawn />
         <Create />
-        <Monsters />
-        <Move />
-        <GameGrid />
+        {game ? <GameGrid /> : <IntroScreen />}
       </Container>
     </Box>
   );

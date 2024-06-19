@@ -1,11 +1,5 @@
-import React, {
-  useState,
-  useEffect,
-  useMemo,
-  useRef,
-  useCallback,
-} from "react";
-import { Box } from "@mui/material";
+import React, { useState, useEffect, useMemo, useRef } from "react";
+import { Box, LinearProgress } from "@mui/material";
 import { useMonsters } from "@/hooks/useMonsters";
 import { useDojo } from "@/dojo/useDojo";
 import { usePlayer } from "@/hooks/usePlayer";
@@ -17,7 +11,6 @@ import { Account } from "starknet";
 interface GameGridProps {}
 
 export const GameGrid: React.FC<GameGridProps> = () => {
-  const { monsters } = useMonsters({ gameId: 1 }); // Use your actual gameId or any necessary parameter
   const initialGrid = useMemo(
     () => Array.from({ length: 5 }, () => Array(8).fill(null)),
     []
@@ -26,6 +19,10 @@ export const GameGrid: React.FC<GameGridProps> = () => {
   const [selectedCharacter, setSelectedCharacter] =
     useState<SelectedCharacter | null>(null);
   const [availableMoves, setAvailableMoves] = useState<number[][]>([]);
+  const [enemyCells, setEnemyCells] = useState<number[][]>([]);
+  const [attackingCells, setAttackingCells] = useState<{
+    [key: string]: boolean;
+  }>({});
 
   const {
     account: { account },
@@ -36,12 +33,12 @@ export const GameGrid: React.FC<GameGridProps> = () => {
   } = useDojo();
   const { player } = usePlayer({ playerId: account.address });
   const { game } = useGame({ gameId: player?.game_id || 0 });
+  const { monsters } = useMonsters({ gameId: player?.game_id || 1 });
 
   const prevMonstersRef = useRef<any[]>([]);
 
   useEffect(() => {
     const prevMonsters = prevMonstersRef.current;
-
     const haveMonstersChanged = () => {
       if (prevMonsters.length !== monsters.length) {
         return true;
@@ -57,55 +54,83 @@ export const GameGrid: React.FC<GameGridProps> = () => {
       }
       return false;
     };
-
     if (monsters && monsters.length > 0 && haveMonstersChanged()) {
-      const updatedGrid = initialGrid.map((row) => row.slice());
-      monsters.forEach((monster: any) => {
-        const char = characters.find((c) => c.id === monster.id);
-        if (char) {
-          updatedGrid[monster.y][monster.x] = { ...char, ...monster };
-        }
-      });
-      setGrid(updatedGrid);
-      prevMonstersRef.current = monsters;
+      refreshGrid();
     }
   }, [monsters, initialGrid]);
 
+  const refreshGrid = () => {
+    const updatedGrid = initialGrid.map((row) => row.slice());
+    monsters.forEach((monster: any) => {
+      const char = characters.find((c) => c.id === monster.id);
+      if (char) {
+        updatedGrid[monster.y][monster.x] = { ...char, ...monster };
+      }
+    });
+    setGrid(updatedGrid);
+    prevMonstersRef.current = monsters;
+  };
+
   const handleCharacterClick = (row: number, col: number) => {
     const character = grid[row][col];
-    if (character) {
+    // Ensure only friendly monsters can be selected
+    if (character && character.team_id !== 2) {
       setSelectedCharacter(character);
       const moves = [];
-      if (row > 0 && !grid[row - 1][col]) moves.push([row - 1, col]);
-      if (row < 4 && !grid[row + 1][col]) moves.push([row + 1, col]);
-      if (col > 0 && !grid[row][col - 1]) moves.push([row, col - 1]);
-      if (col < 7 && !grid[row][col + 1]) moves.push([row, col + 1]);
+      const enemies = [];
+      if (row > 0) {
+        if (!grid[row - 1][col]) moves.push([row - 1, col]);
+        if (grid[row - 1][col]?.team_id === 2) enemies.push([row - 1, col]);
+      }
+      if (row < 4) {
+        if (!grid[row + 1][col]) moves.push([row + 1, col]);
+        if (grid[row + 1][col]?.team_id === 2) enemies.push([row + 1, col]);
+      }
+      if (col > 0) {
+        if (!grid[row][col - 1]) moves.push([row, col - 1]);
+        if (grid[row][col - 1]?.team_id === 2) enemies.push([row, col - 1]);
+      }
+      if (col < 7) {
+        if (!grid[row][col + 1]) moves.push([row, col + 1]);
+        if (grid[row][col + 1]?.team_id === 2) enemies.push([row, col + 1]);
+      }
       setAvailableMoves(moves);
+      setEnemyCells(enemies);
     }
   };
 
   const handleMoveClick = (row: number, col: number) => {
     if (
       selectedCharacter &&
-      availableMoves.some((move) => move[0] === row && move[1] === col)
+      (availableMoves.some((move) => move[0] === row && move[1] === col) ||
+        enemyCells.some((enemy) => enemy[0] === row && enemy[1] === col))
     ) {
       const { id, x, y }: any = selectedCharacter;
       if (!game) return;
       move({
         account: account as Account,
         game_id: game.id,
-        team_id: 1, // Update with correct team ID
+        team_id: 1,
         monster_id: id,
         x: col,
         y: row,
         special: false,
       });
-      const newGrid = grid.map((row) => row.slice());
-      newGrid[selectedCharacter.y][selectedCharacter.x] = null;
-      newGrid[row][col] = { ...selectedCharacter, x: col, y: row };
-      setGrid(newGrid);
+      if (enemyCells.some((enemy) => enemy[0] === row && enemy[1] === col)) {
+        setAttackingCells((prev) => ({ ...prev, [`${x}-${y}`]: true }));
+        setTimeout(() => {
+          setAttackingCells((prev) => ({ ...prev, [`${x}-${y}`]: false }));
+          refreshGrid();
+        }, 3000);
+      } else {
+        const newGrid = grid.map((row) => row.slice());
+        newGrid[selectedCharacter.y][selectedCharacter.x] = null;
+        newGrid[row][col] = { ...selectedCharacter, x: col, y: row };
+        setGrid(newGrid);
+      }
       setSelectedCharacter(null);
       setAvailableMoves([]);
+      setEnemyCells([]);
     }
   };
 
@@ -132,6 +157,7 @@ export const GameGrid: React.FC<GameGridProps> = () => {
                 width: 100,
                 height: 100,
                 display: "flex",
+                flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
                 border: "1px solid black",
@@ -140,34 +166,65 @@ export const GameGrid: React.FC<GameGridProps> = () => {
                   (move) => move[0] === rowIndex && move[1] === colIndex
                 )
                   ? "green"
-                  : "transparent",
+                  : enemyCells.some(
+                        (enemy) =>
+                          enemy[0] === rowIndex && enemy[1] === colIndex
+                      )
+                    ? "red"
+                    : "transparent",
                 cursor:
-                  cell ||
+                  (cell && cell.team_id !== 2) ||
                   availableMoves.some(
                     (move) => move[0] === rowIndex && move[1] === colIndex
+                  ) ||
+                  enemyCells.some(
+                    (enemy) => enemy[0] === rowIndex && enemy[1] === colIndex
                   )
                     ? "pointer"
                     : "default",
               }}
               onClick={() =>
-                cell
+                cell && cell.team_id !== 2
                   ? handleCharacterClick(rowIndex, colIndex)
                   : handleMoveClick(rowIndex, colIndex)
               }
             >
               {cell && (
-                <img
-                  src={cell.idle}
-                  alt={cell.name}
-                  style={{
-                    width: "100%",
-                    height: "160px",
-                    margin: 0,
-                    marginBottom: "30px",
-                    objectFit: "cover",
-                    backgroundColor: "transparent",
-                  }}
-                />
+                <>
+                  <Box sx={{ width: "60%", mb: -2.5 }}>
+                    <LinearProgress
+                      variant="determinate"
+                      color="warning"
+                      value={(cell.health / 100) * 100}
+                      sx={{ borderRadius: "1rem" }}
+                    />
+                    <LinearProgress
+                      variant="determinate"
+                      value={(cell.mana / 100) * 100}
+                      color="info"
+                      sx={{
+                        mt: "0.25rem",
+                        borderRadius: "1rem",
+                      }}
+                    />
+                  </Box>
+                  <img
+                    src={
+                      attackingCells[`${cell.x}-${cell.y}`]
+                        ? cell.attack
+                        : cell.idle
+                    }
+                    alt={cell.name}
+                    style={{
+                      width: "100%",
+                      height: "200px",
+                      margin: 0,
+                      marginBottom: "0px",
+                      objectFit: "cover",
+                      backgroundColor: "transparent",
+                    }}
+                  />
+                </>
               )}
             </Box>
           ))
