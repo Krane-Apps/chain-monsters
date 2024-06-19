@@ -43,10 +43,10 @@ export const characters: Character[] =
 [
     { id: 1, name: 'Fire Golem', idle: fire_golem_idle, attack: fire_golem_attack, walk: fire_golem_walking, dead: fire_golem_dying },
     { id: 2, name: 'Ice Golem', idle: ice_golem_idle, attack: ice_golem_attack, walk: ice_golem_walking, dead: ice_golem_dying },
-    { id: 4, name: 'Green Goblin', idle: goblin_idle, attack: goblin_attack, walk: goblin_walking, dead: goblin_dying },
-    { id: 5, name: 'Green Orc', idle: orc_idle, attack: orc_attack, walk: orc_walking, dead: orc_dying },
-    { id: 7, name: 'Blue Eyed Angel', idle: blue_eyed_angle_idle, attack: blue_eyed_angle_attack, walk: blue_eyed_angle_walking, dead: blue_eyed_angle_dying },
-    { id: 8, name: 'Crown Angle', idle: crown_angle_idle, attack: crown_angle_attack, walk: crown_angle_walking, dead: crown_angle_dying },
-    { id: 10, name: 'Earth Minotaur', idle: earth_minotaur_idle, attack: earth_minotaur_attack, walk: earth_minotaur_walking, dead: earth_minotaur_dying },
-    { id: 11, name: 'Stone Minotaur', idle: stone_minotaur_idle, attack: stone_minotaur_attack, walk: stone_minotaur_walking, dead: stone_minotaur_dying },
+    { id: 3, name: 'Green Goblin', idle: goblin_idle, attack: goblin_attack, walk: goblin_walking, dead: goblin_dying },
+    { id: 4, name: 'Green Orc', idle: orc_idle, attack: orc_attack, walk: orc_walking, dead: orc_dying },
+    { id: 5, name: 'Blue Eyed Angel', idle: blue_eyed_angle_idle, attack: blue_eyed_angle_attack, walk: blue_eyed_angle_walking, dead: blue_eyed_angle_dying },
+    { id: 6, name: 'Crown Angle', idle: crown_angle_idle, attack: crown_angle_attack, walk: crown_angle_walking, dead: crown_angle_dying },
+    { id: 7, name: 'Earth Minotaur', idle: earth_minotaur_idle, attack: earth_minotaur_attack, walk: earth_minotaur_walking, dead: earth_minotaur_dying },
+    { id: 8, name: 'Stone Minotaur', idle: stone_minotaur_idle, attack: stone_minotaur_attack, walk: stone_minotaur_walking, dead: stone_minotaur_dying },
 ];
