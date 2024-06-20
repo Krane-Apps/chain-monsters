@@ -84,16 +84,24 @@ impl Grid of GridTrait {
             } else if from_x > to_x {
                 ways.append((from_x - 1, from_y));
             } else {
-                ways.append((from_x + 1, from_y));
-                ways.append((from_x - 1, from_y));
+                if from_x < DEFAULT_MAX_X {
+                    ways.append((from_x + 1, from_y));
+                }
+                if from_x > DEFAULT_MIN_X {
+                    ways.append((from_x - 1, from_y));
+                }
             }
             if from_y < to_y {
                 ways.append((from_x, from_y + 1));
             } else if from_y > to_y {
                 ways.append((from_x, from_y - 1));
             } else {
-                ways.append((from_x, from_y + 1));
-                ways.append((from_x, from_y - 1));
+                if from_y < DEFAULT_MAX_Y {
+                    ways.append((from_x, from_y + 1));
+                }
+                if from_y > DEFAULT_MIN_Y {
+                    ways.append((from_x, from_y - 1));
+                }
             }
         } else {
             if from_y < to_y {
@@ -101,16 +109,24 @@ impl Grid of GridTrait {
             } else if from_y > to_y {
                 ways.append((from_x, from_y - 1));
             } else {
-                ways.append((from_x, from_y + 1));
-                ways.append((from_x, from_y - 1));
+                if from_y < DEFAULT_MAX_Y {
+                    ways.append((from_x, from_y + 1));
+                }
+                if from_y > DEFAULT_MIN_Y {
+                    ways.append((from_x, from_y - 1));
+                }
             }
             if from_x < to_x {
                 ways.append((from_x + 1, from_y));
             } else if from_x > to_x {
                 ways.append((from_x - 1, from_y));
             } else {
-                ways.append((from_x + 1, from_y));
-                ways.append((from_x - 1, from_y));
+                if from_x < DEFAULT_MAX_X {
+                    ways.append((from_x + 1, from_y));
+                }
+                if from_x > DEFAULT_MIN_X {
+                    ways.append((from_x - 1, from_y));
+                }
             }
         }
 
