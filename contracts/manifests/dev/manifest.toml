@@ -22,8 +22,8 @@ name = "dojo::base::base"
 [[contracts]]
 kind = "DojoContract"
 address = "0x41f026f7c3305ef09e21f37be5835d0610ca6db0058d7ada7ac0052e66a63d5"
-class_hash = "0x3ca9520c564155a71905c1c68980494d741512ab1fd47638b50a8c40c11cd7f"
-original_class_hash = "0x3ca9520c564155a71905c1c68980494d741512ab1fd47638b50a8c40c11cd7f"
+class_hash = "0x52233a0078052f30b1da8db156081438ed3a215c4fd6e2584aedbbb9e0171a5"
+original_class_hash = "0x52233a0078052f30b1da8db156081438ed3a215c4fd6e2584aedbbb9e0171a5"
 base_class_hash = "0x22f3e55b61d86c2ac5239fa3b3b8761f26b9a5c0b5f61ddbd5d756ced498b46"
 abi = "manifests/dev/abis/deployments/contracts/chain_monsters_systems_actions_actions.json"
 reads = []
@@ -87,8 +87,8 @@ key = false
 
 [[models]]
 kind = "DojoModel"
-class_hash = "0x1a9959b617c5152d78e9a3e7f4d36ee21df2598fdab856ce75cc7c6c180891a"
-original_class_hash = "0x1a9959b617c5152d78e9a3e7f4d36ee21df2598fdab856ce75cc7c6c180891a"
+class_hash = "0x710dde303452463925e579e33502cdde8f7dc56b165aa0189a19811f7505cf1"
+original_class_hash = "0x710dde303452463925e579e33502cdde8f7dc56b165aa0189a19811f7505cf1"
 abi = "manifests/dev/abis/deployments/models/chain_monsters_models_index_monster.json"
 name = "chain_monsters::models::index::monster"
 
@@ -129,6 +129,16 @@ key = false
 
 [[models.members]]
 name = "y"
+type = "u8"
+key = false
+
+[[models.members]]
+name = "last_x"
+type = "u8"
+key = false
+
+[[models.members]]
+name = "last_y"
 type = "u8"
 key = false
 

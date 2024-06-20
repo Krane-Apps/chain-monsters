@@ -8,6 +8,7 @@ use starknet::ContractAddress;
 mod PlayableComponent {
     // Core imports
 
+    use core::array::ArrayTrait;
     use core::debug::PrintTrait;
 
     // Starknet imports
@@ -123,7 +124,7 @@ mod PlayableComponent {
             special: bool
         ) {
             // [Setup] Datastore
-            let store: Store = StoreTrait::new(world);
+            let mut store: Store = StoreTrait::new(world);
 
             // [Check] Player exists
             let caller = get_caller_address();
@@ -147,34 +148,26 @@ mod PlayableComponent {
             monster.assert_is_alive();
 
             // [Effect] Perform the move
-            if game.is_idle(x, y) {
-                // [Effect] Move monster if spot is idle
-                game.update_positions(monster.x, monster.y, x, y);
-                monster.move(x, y);
-            } else {
-                // [Effect] Attack the target if spot is not idle
-                let position = store.monster_position(game_id, x, y);
-                let mut target = store
-                    .monster(position.game_id, position.team_id, position.monster_id);
-                monster.attack(ref target, special);
-                // [Effect] Assess dead, remove from the grid
-                if target.is_zero() {
-                    // [Effect] Remove an entity from the team
-                    let mut opponent = store.team(game_id, position.team_id);
-                    opponent.alive_count -= 1;
-                    // [Effect] Remove from the grid
-                    game.unset_positions(target.x, target.y);
-                    // [Effect] Assess game assess_over
-                    game.over = opponent.alive_count == 0;
-                    // [Effect] Update Team
-                    store.set_team(opponent);
-                }
-                // [Effect] Update target
-                store.set_monster(target);
+            self.__move(world, ref store, ref game, ref monster, x, y, special);
+
+            // [Check] Game is over
+            if game.over {
+                // [Effect] Update game
+                return store.set_game(game);
             }
 
-            // [Effect] Update monster
-            store.set_monster(monster);
+            // [Effect] Player IA turn
+            let opponent = store.opponent(game.id, game.player_count, team.id);
+            let monsters = store.monsters(game.id, opponent.id);
+            let random: u256 = game.seed.into() % monsters.len().into();
+            let index: u8 = random.try_into().unwrap();
+            let mut monster = *monsters.at(index.into());
+            let mut targets = store.monsters(game.id, team.id);
+            let target = monster.closest(ref targets);
+            let (x, y) = monster.next(target, game.positions);
+            let special = monster.is_full();
+            self.__move(world, ref store, ref game, ref monster, x, y, special);
+            game.reseed();
 
             // [Effect] Update game
             store.set_game(game);
@@ -197,6 +190,54 @@ mod PlayableComponent {
             // [Effect] Update game
             game.over = true;
             store.set_game(game);
+        }
+    }
+
+    #[generate_trait]
+    impl PrivateImpl<
+        TContractState, +HasComponent<TContractState>
+    > of PrivateTrait<TContractState> {
+        fn __move(
+            self: @ComponentState<TContractState>,
+            world: IWorldDispatcher,
+            ref store: Store,
+            ref game: Game,
+            ref monster: Monster,
+            x: u8,
+            y: u8,
+            special: bool
+        ) {
+            // [Effect] Perform the move
+            if game.is_idle(x, y) {
+                // [Effect] Move monster if spot is idle
+                game.update_positions(monster.x, monster.y, x, y);
+                monster.move(x, y);
+            } else {
+                // [Effect] Attack the target if spot is not idle
+                let position = store.monster_position(game.id, x, y);
+                let mut target = store
+                    .monster(position.game_id, position.team_id, position.monster_id);
+                monster.attack(ref target, special);
+                // [Effect] Assess dead, remove from the grid
+                if target.is_zero() {
+                    // [Effect] Remove an entity from the team
+                    let mut opponent = store.team(game.id, position.team_id);
+                    opponent.alive_count -= 1;
+                    // [Effect] Remove from the grid
+                    game.unset_positions(target.x, target.y);
+                    // [Effect] Assess game assess_over
+                    game.over = opponent.alive_count == 0;
+                    // [Effect] Update Team
+                    store.set_team(opponent);
+                }
+                // [Effect] Update target
+                store.set_monster(target);
+            }
+
+            // [Effect] Update monster
+            monster.last_x = monster.x;
+            monster.last_y = monster.y;
+            store.set_monster(monster);
         }
     }
 }

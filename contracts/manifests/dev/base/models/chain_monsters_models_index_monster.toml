@@ -1,6 +1,6 @@
 kind = "DojoModel"
-class_hash = "0x1a9959b617c5152d78e9a3e7f4d36ee21df2598fdab856ce75cc7c6c180891a"
-original_class_hash = "0x1a9959b617c5152d78e9a3e7f4d36ee21df2598fdab856ce75cc7c6c180891a"
+class_hash = "0x710dde303452463925e579e33502cdde8f7dc56b165aa0189a19811f7505cf1"
+original_class_hash = "0x710dde303452463925e579e33502cdde8f7dc56b165aa0189a19811f7505cf1"
 abi = "manifests/dev/abis/base/models/chain_monsters_models_index_monster.json"
 name = "chain_monsters::models::index::monster"
 
@@ -41,5 +41,15 @@ key = false
 
 [[members]]
 name = "y"
+type = "u8"
+key = false
+
+[[members]]
+name = "last_x"
+type = "u8"
+key = false
+
+[[members]]
+name = "last_y"
 type = "u8"
 key = false

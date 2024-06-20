@@ -14,10 +14,13 @@ use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
 
 // Models imports
 
+use chain_monsters::constants;
 use chain_monsters::models::game::{Game, GameTrait};
 use chain_monsters::models::player::{Player, PlayerTrait};
 use chain_monsters::models::team::{Team, TeamTrait};
-use chain_monsters::models::monster::{Monster, MonsterPosition, MonsterTrait, MonsterIntoPosition};
+use chain_monsters::models::monster::{
+    Monster, MonsterPosition, MonsterTrait, MonsterIntoPosition, ZeroableMonster
+};
 
 // Errors
 
@@ -59,6 +62,22 @@ impl StoreImpl of StoreTrait {
         get!(self.world, (game_id, x, y), (MonsterPosition))
     }
 
+    fn monsters(self: Store, game_id: u32, team_id: u8) -> Array<Monster> {
+        let mut monsters: Array<Monster> = array![];
+        let mut monster_id = constants::DEFAULT_MONSTER_COUNT;
+        loop {
+            if monster_id == 0 {
+                break;
+            }
+            let monster = self.monster(game_id, team_id, monster_id);
+            if monster.is_non_zero() {
+                monsters.append(monster);
+            }
+            monster_id -= 1;
+        };
+        monsters
+    }
+
     #[inline(always)]
     fn team(self: Store, game_id: u32, team_id: u8) -> Team {
         get!(self.world, (game_id, team_id), (Team))
@@ -81,6 +100,16 @@ impl StoreImpl of StoreTrait {
     fn find_team(self: Store, game_id: u32, player_id: felt252, mut count: u8) -> Team {
         let team = self.search_team(game_id, player_id, count);
         team.expect(errors::STORE_TEAM_NOT_FOUND)
+    }
+
+    #[inline(always)]
+    fn opponent(self: Store, game_id: u32, player_count: u8, team_id: u8) -> Team {
+        let opponent_id = if team_id == 1 {
+            player_count
+        } else {
+            1
+        };
+        self.team(game_id, opponent_id)
     }
 
     fn teams(self: Store, game_id: u32, team_count: u8) -> Array<felt252> {

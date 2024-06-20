@@ -46,6 +46,8 @@ struct Monster {
     mana: u8,
     x: u8,
     y: u8,
+    last_x: u8,
+    last_y: u8,
 }
 
 #[derive(Copy, Drop, Serde, IntrospectPacked)]

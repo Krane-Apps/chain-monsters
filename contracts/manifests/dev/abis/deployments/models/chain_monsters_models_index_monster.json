@@ -357,6 +357,14 @@
       {
         "name": "y",
         "type": "core::integer::u8"
+      },
+      {
+        "name": "last_x",
+        "type": "core::integer::u8"
+      },
+      {
+        "name": "last_y",
+        "type": "core::integer::u8"
       }
     ]
   },

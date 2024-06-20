@@ -13,7 +13,7 @@ interface GameGridProps {}
 export const GameGrid: React.FC<GameGridProps> = () => {
   const initialGrid = useMemo(
     () => Array.from({ length: 5 }, () => Array(8).fill(null)),
-    []
+    [],
   );
   const [grid, setGrid] = useState<(SelectedCharacter | null)[][]>(initialGrid);
   const [selectedCharacter, setSelectedCharacter] =
@@ -163,22 +163,22 @@ export const GameGrid: React.FC<GameGridProps> = () => {
                 border: "1px solid black",
                 borderRadius: "8px",
                 backgroundColor: availableMoves.some(
-                  (move) => move[0] === rowIndex && move[1] === colIndex
+                  (move) => move[0] === rowIndex && move[1] === colIndex,
                 )
                   ? "green"
                   : enemyCells.some(
                         (enemy) =>
-                          enemy[0] === rowIndex && enemy[1] === colIndex
+                          enemy[0] === rowIndex && enemy[1] === colIndex,
                       )
                     ? "red"
                     : "transparent",
                 cursor:
                   (cell && cell.team_id !== 2) ||
                   availableMoves.some(
-                    (move) => move[0] === rowIndex && move[1] === colIndex
+                    (move) => move[0] === rowIndex && move[1] === colIndex,
                   ) ||
                   enemyCells.some(
-                    (enemy) => enemy[0] === rowIndex && enemy[1] === colIndex
+                    (enemy) => enemy[0] === rowIndex && enemy[1] === colIndex,
                   )
                     ? "pointer"
                     : "default",
@@ -227,7 +227,7 @@ export const GameGrid: React.FC<GameGridProps> = () => {
                 </>
               )}
             </Box>
-          ))
+          )),
         )}
       </Box>
     </Box>

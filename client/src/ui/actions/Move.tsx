@@ -32,7 +32,7 @@ export const Move = () => {
 
   const disabled = useMemo(
     () => !account || !master || account == master || !player || !game,
-    [account, master, player, game]
+    [account, master, player, game],
   );
 
   return (

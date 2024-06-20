@@ -9,6 +9,8 @@ export class Monster {
   public mana: number;
   public x: number;
   public y: number;
+  public last_x: number;
+  public last_y: number;
 
   constructor(monster: ComponentValue) {
     this.game_id = monster.game_id;
@@ -19,5 +21,7 @@ export class Monster {
     this.mana = monster.mana;
     this.x = monster.x;
     this.y = monster.y;
+    this.last_x = monster.last_x;
+    this.last_y = monster.last_y;
   }
 }
