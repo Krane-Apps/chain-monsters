@@ -1,22 +1,41 @@
+import { useState } from "react";
+import { Box, Container } from "@mui/material";
+import IntroScreen from "./components/intro-screen";
+import { GameGrid } from "./components/game-grid";
+import background from "./assets/backgrounds/game_background.png";
 import "./App.css";
-import { Account } from "./ui/components/Account";
-import { Spawn } from "./ui/actions/Spawn";
-import { Create } from "./ui/actions/Create";
-import { Monsters } from "./ui/containers/Monsters";
-import { Move } from "./ui/actions/Move";
-import { Surrender } from "./ui/actions/Surrender";
+import { useGame } from "./hooks/useGame";
+import { useDojo } from "./dojo/useDojo";
+import { usePlayer } from "./hooks/usePlayer";
 
 function App() {
+  const {
+    account: { account },
+    master,
+    setup: {
+      systemCalls: { move },
+    },
+  } = useDojo();
+  const { player } = usePlayer({ playerId: account.address });
+  const { game } = useGame({ gameId: player?.game_id || 0 });
+
   return (
-    <div className="flex flex-col gap-4">
-      <h1>Chain Monsters</h1>
-      <Account />
-      <Spawn />
-      <Create />
-      <Monsters />
-      <Move />
-      <Surrender />
-    </div>
+    <Box
+      sx={{
+        backgroundImage: `url(${background})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <Container>
+        <Create />
+        {game ? <GameGrid /> : <IntroScreen />}
+      </Container>
+    </Box>
   );
 }
 
