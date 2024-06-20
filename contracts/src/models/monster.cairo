@@ -89,16 +89,16 @@ impl MonsterImpl of MonsterTrait {
         }
     }
 
-    fn closest(self: Monster, ref targets: Array<Monster>) -> Monster {
-        let mut closest = targets.pop_front().unwrap();
+    fn closest(self: Monster, ref targets: Span<Monster>) -> Monster {
+        let mut closest = *targets.pop_front().unwrap();
         let mut min_distance = Grid::squared_distance(self.x, self.y, closest.x, closest.y);
         loop {
             match targets.pop_front() {
                 Option::Some(target) => {
-                    let distance = Grid::squared_distance(self.x, self.y, target.x, target.y);
+                    let distance = Grid::squared_distance(self.x, self.y, *target.x, *target.y);
                     if distance < min_distance {
                         min_distance = distance;
-                        closest = target;
+                        closest = *target;
                     }
                 },
                 Option::None => { break closest; },

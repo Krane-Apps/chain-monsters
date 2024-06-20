@@ -159,15 +159,26 @@ mod PlayableComponent {
             // [Effect] Player IA turn
             let opponent = store.opponent(game.id, game.player_count, team.id);
             let monsters = store.monsters(game.id, opponent.id);
-            let random: u256 = game.seed.into() % monsters.len().into();
-            let index: u8 = random.try_into().unwrap();
-            let mut monster = *monsters.at(index.into());
-            let mut targets = store.monsters(game.id, team.id);
-            let target = monster.closest(ref targets);
-            let (x, y) = monster.next(target, game.positions);
-            let special = monster.is_full();
-            self.__move(world, ref store, ref game, ref monster, x, y, special);
-            game.reseed();
+            let targets = store.monsters(game.id, team.id);
+            let mut attempts = 10;
+            loop {
+                if attempts == 0 {
+                    break;
+                }
+                let random: u256 = game.seed.into() % monsters.len().into();
+                let index: u8 = random.try_into().unwrap();
+                game.reseed();
+                let mut monster = *monsters.at(index.into());
+                let mut span_targets = targets.span();
+                let target = monster.closest(ref span_targets);
+                let (x, y) = monster.next(target, game.positions);
+                if x != monster.x || y != monster.y {
+                    let special = monster.is_full();
+                    self.__move(world, ref store, ref game, ref monster, x, y, special);
+                    break;
+                }
+                attempts -= 1;
+            };
 
             // [Effect] Update game
             store.set_game(game);
