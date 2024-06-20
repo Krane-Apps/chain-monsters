@@ -22,7 +22,7 @@ export const MonsterSelection: React.FC<MonsterSelectionProps> = ({
     SelectedCharacter[]
   >([]);
   const [hoveredCharacterId, setHoveredCharacterId] = useState<number | null>(
-    null
+    null,
   );
 
   const handleCharacterClick = (character: Character) => {
@@ -30,7 +30,7 @@ export const MonsterSelection: React.FC<MonsterSelectionProps> = ({
 
     if (isSelected) {
       setSelectedCharacters(
-        selectedCharacters.filter((c) => c.id !== character.id)
+        selectedCharacters.filter((c) => c.id !== character.id),
       );
     } else {
       if (selectedCharacters.length < 4) {

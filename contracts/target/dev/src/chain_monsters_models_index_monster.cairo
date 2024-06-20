@@ -1,11 +1,11 @@
 impl MonsterIntrospect<> of dojo::database::introspect::Introspect<Monster<>> {
     #[inline(always)]
     fn size() -> Option<usize> {
-        Option::Some(5)
+        Option::Some(7)
     }
 
     fn layout() -> dojo::database::introspect::Layout {
-        dojo::database::introspect::Layout::Fixed(array![8, 8, 8, 8, 8].span())
+        dojo::database::introspect::Layout::Fixed(array![8, 8, 8, 8, 8, 8, 8].span())
     }
 
     #[inline(always)]
@@ -52,6 +52,16 @@ impl MonsterIntrospect<> of dojo::database::introspect::Introspect<Monster<>> {
                     },
                     dojo::database::introspect::Member {
                         name: 'y',
+                        attrs: array![].span(),
+                        ty: dojo::database::introspect::Introspect::<u8>::ty()
+                    },
+                    dojo::database::introspect::Member {
+                        name: 'last_x',
+                        attrs: array![].span(),
+                        ty: dojo::database::introspect::Introspect::<u8>::ty()
+                    },
+                    dojo::database::introspect::Member {
+                        name: 'last_y',
                         attrs: array![].span(),
                         ty: dojo::database::introspect::Introspect::<u8>::ty()
                     }
@@ -130,6 +140,8 @@ impl MonsterModel of dojo::model::Model<Monster> {
         core::serde::Serde::serialize(self.mana, ref serialized);
         core::serde::Serde::serialize(self.x, ref serialized);
         core::serde::Serde::serialize(self.y, ref serialized);
+        core::serde::Serde::serialize(self.last_x, ref serialized);
+        core::serde::Serde::serialize(self.last_y, ref serialized);
         core::array::ArrayTrait::span(@serialized)
     }
 

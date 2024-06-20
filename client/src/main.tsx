@@ -20,7 +20,7 @@ async function init() {
         <App />
         <Toaster />
       </DojoProvider>
-    </React.StrictMode>
+    </React.StrictMode>,
   );
 }
 

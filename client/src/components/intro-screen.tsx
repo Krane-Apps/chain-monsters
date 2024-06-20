@@ -27,12 +27,12 @@ const IntroScreen = () => {
       account == master ||
       !!player ||
       !playerName.trim(),
-    [account, master, player, playerName]
+    [account, master, player, playerName],
   );
 
   const disabled = useMemo(
     () => !account || !master || account == master || !player,
-    [account, master, player]
+    [account, master, player],
   );
 
   const handleSpawnClick = useCallback(() => {

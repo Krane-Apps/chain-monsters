@@ -1,5 +1,6 @@
 // Core imports
 
+use core::debug::PrintTrait;
 use core::zeroable::Zeroable;
 
 // Internal imports
@@ -34,8 +35,15 @@ impl MonsterImpl of MonsterTrait {
             damage: DEFAULT_DAMAGE,
             mana: DEFAULT_MANA,
             x,
-            y
+            y,
+            last_x: x,
+            last_y: y,
         }
+    }
+
+    #[inline(always)]
+    fn is_full(self: Monster) -> bool {
+        self.mana == DEFAULT_MAX_MANA
     }
 
     #[inline(always)]
@@ -80,6 +88,27 @@ impl MonsterImpl of MonsterTrait {
             self.mana += DEFAULT_MANA_GAIN;
         }
     }
+
+    fn closest(self: Monster, ref targets: Array<Monster>) -> Monster {
+        let mut closest = targets.pop_front().unwrap();
+        let mut min_distance = Grid::squared_distance(self.x, self.y, closest.x, closest.y);
+        loop {
+            match targets.pop_front() {
+                Option::Some(target) => {
+                    let distance = Grid::squared_distance(self.x, self.y, target.x, target.y);
+                    if distance < min_distance {
+                        min_distance = distance;
+                        closest = target;
+                    }
+                },
+                Option::None => { break closest; },
+            };
+        }
+    }
+
+    fn next(self: Monster, target: Monster, positions: u64) -> (u8, u8) {
+        Grid::next_position(self.x, self.y, target.x, target.y, positions)
+    }
 }
 
 #[generate_trait]
@@ -118,14 +147,25 @@ impl AssertImpl of MonsterAssert {
 
     #[inline(always)]
     fn assert_is_full(self: Monster) {
-        assert(self.mana == DEFAULT_MAX_MANA, errors::MONSTER_NOT_ENOUGH_MANA);
+        assert(self.is_full(), errors::MONSTER_NOT_ENOUGH_MANA);
     }
 }
 
 impl ZeroableMonster of Zeroable<Monster> {
     #[inline(always)]
     fn zero() -> Monster {
-        Monster { game_id: 0, team_id: 0, id: 0, health: 0, damage: 0, mana: 0, x: 0, y: 0 }
+        Monster {
+            game_id: 0,
+            team_id: 0,
+            id: 0,
+            health: 0,
+            damage: 0,
+            mana: 0,
+            x: 0,
+            y: 0,
+            last_x: 0,
+            last_y: 0
+        }
     }
 
     #[inline(always)]
