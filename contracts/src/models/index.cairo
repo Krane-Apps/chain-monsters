@@ -28,6 +28,7 @@ struct Team {
     game_id: u32,
     #[key]
     id: u8,
+    alive_count: u8,
     player_id: felt252,
 }
 

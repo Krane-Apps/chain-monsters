@@ -20,4 +20,8 @@ export class Game {
     this.seed = game.seed;
     this.host = `0x${game.host.toString(16)}`;
   }
+
+  public isOver() {
+    return this.over;
+  }
 }

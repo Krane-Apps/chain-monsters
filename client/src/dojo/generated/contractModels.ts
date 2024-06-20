@@ -103,12 +103,13 @@ export function defineContractComponents(world: World) {
         {
           game_id: RecsType.Number,
           id: RecsType.Number,
+          alive_count: RecsType.Number,
           player_id: RecsType.BigInt,
         },
         {
           metadata: {
             name: "Team",
-            types: ["u32", "u8", "felt252"],
+            types: ["u32", "u8", "u8", "felt252"],
             customTypes: [],
           },
         },

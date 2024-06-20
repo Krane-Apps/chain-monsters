@@ -69,8 +69,9 @@ mod PlayableComponent {
 
             // [Effect] Create a new Team and Monsters
             let team_id = game.join();
-            let mut team = TeamTrait::new(game_id, team_id, player.id);
-            let mut monster_id = constants::DEFAULT_MONSTER_COUNT;
+            let monster_count = constants::DEFAULT_MONSTER_COUNT;
+            let mut team = TeamTrait::new(game_id, team_id, monster_count, player.id);
+            let mut monster_id = monster_count;
             loop {
                 if monster_id == 0 {
                     break;
@@ -85,8 +86,8 @@ mod PlayableComponent {
 
             // [EFfect] Create the opponent Team and Monsters
             let team_id = game.join();
-            let mut team = TeamTrait::new(game_id, team_id, 0);
-            let mut monster_id = constants::DEFAULT_MONSTER_COUNT;
+            let mut team = TeamTrait::new(game_id, team_id, monster_count, 0);
+            let mut monster_id = monster_count;
             loop {
                 if monster_id == 0 {
                     break;
@@ -158,7 +159,15 @@ mod PlayableComponent {
                 monster.attack(ref target, special);
                 // [Effect] Assess dead, remove from the grid
                 if target.is_zero() {
+                    // [Effect] Remove an entity from the team
+                    let mut opponent = store.team(game_id, position.team_id);
+                    opponent.alive_count -= 1;
+                    // [Effect] Remove from the grid
                     game.unset_positions(target.x, target.y);
+                    // [Effect] Assess game assess_over
+                    game.over = opponent.alive_count == 0;
+                    // [Effect] Update Team
+                    store.set_team(opponent);
                 }
                 // [Effect] Update target
                 store.set_monster(target);
@@ -168,6 +177,25 @@ mod PlayableComponent {
             store.set_monster(monster);
 
             // [Effect] Update game
+            store.set_game(game);
+        }
+
+        fn _surrender(self: @ComponentState<TContractState>, world: IWorldDispatcher) {
+            // [Setup] Datastore
+            let store: Store = StoreTrait::new(world);
+
+            // [Check] Player exists
+            let caller = get_caller_address();
+            let player = store.player(caller.into());
+            player.assert_exists();
+
+            // [Check] Game exists and not over
+            let mut game = store.game(player.game_id);
+            game.assert_exists();
+            game.assert_not_over();
+
+            // [Effect] Update game
+            game.over = true;
             store.set_game(game);
         }
     }

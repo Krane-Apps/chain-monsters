@@ -1,4 +1,5 @@
 import { useDojo } from "@/dojo/useDojo";
+import { useGame } from "@/hooks/useGame";
 import { useMonsters } from "@/hooks/useMonsters";
 import { usePlayer } from "@/hooks/usePlayer";
 
@@ -8,11 +9,11 @@ export const Monsters = () => {
   } = useDojo();
 
   const { player } = usePlayer({ playerId: account.address });
+  const { game } = useGame({ gameId: player?.game_id || 0 });
   const { monsters } = useMonsters({ gameId: player?.game_id || 0 });
 
-  console.log(monsters);
-
-  if (!player || !monsters || monsters.length == 0) return null;
+  if (!player || !game || game.isOver() || !monsters || monsters.length == 0)
+    return null;
 
   return (
     <div className="flex flex-col items-center">

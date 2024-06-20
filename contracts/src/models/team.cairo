@@ -20,8 +20,8 @@ mod errors {
 #[generate_trait]
 impl TeamImpl of TeamTrait {
     #[inline(always)]
-    fn new(game_id: u32, id: u8, player_id: felt252) -> Team {
-        Team { game_id, id, player_id, }
+    fn new(game_id: u32, id: u8, alive_count: u8, player_id: felt252) -> Team {
+        Team { game_id, id, alive_count, player_id, }
     }
 
     #[inline(always)]
@@ -51,7 +51,7 @@ impl AssertImpl of TeamAssert {
 impl ZeroableTeam of Zeroable<Team> {
     #[inline(always)]
     fn zero() -> Team {
-        Team { game_id: 0, id: 0, player_id: 0, }
+        Team { game_id: 0, id: 0, alive_count: 0, player_id: 0, }
     }
 
     #[inline(always)]

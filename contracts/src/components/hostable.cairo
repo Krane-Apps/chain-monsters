@@ -58,7 +58,8 @@ mod HostableComponent {
             store.set_game(game);
 
             // [Effect] Create a new Team
-            let team = TeamTrait::new(game_id, team_id, player.id);
+            let monster_count = constants::DEFAULT_MONSTER_COUNT;
+            let team = TeamTrait::new(game_id, team_id, monster_count, player.id);
             store.set_team(team);
 
             // [Return] Game id
@@ -95,7 +96,8 @@ mod HostableComponent {
             store.set_game(game);
 
             // [Effect] Create a new player
-            let team = TeamTrait::new(game_id, team_id, player.id);
+            let monster_count = constants::DEFAULT_MONSTER_COUNT;
+            let team = TeamTrait::new(game_id, team_id, monster_count, player.id);
             store.set_team(team);
         }
 

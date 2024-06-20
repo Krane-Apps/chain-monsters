@@ -48,8 +48,8 @@ export function systems({
           retryInterval: 100,
         }),
       );
-    } catch (error) {
-      console.error("Error spawning player:", error);
+    } catch (error: any) {
+      toast.error(extractedMessage(error.message));
     }
   };
 
@@ -66,8 +66,8 @@ export function systems({
           retryInterval: 100,
         }),
       );
-    } catch (error) {
-      console.error("Error creating game:", error);
+    } catch (error: any) {
+      toast.error(extractedMessage(error.message));
     }
   };
 
@@ -210,8 +210,26 @@ export function systems({
           retryInterval: 100,
         }),
       );
-    } catch (error) {
-      console.error("Error moving player:", error);
+    } catch (error: any) {
+      toast.error(extractedMessage(error.message));
+    }
+  };
+
+  const surrender = async ({ account, ...props }: SystemTypes.Surrender) => {
+    try {
+      const { transaction_hash } = await client.actions.surrender({
+        account,
+        ...props,
+      });
+
+      notify(
+        `Player has surrendered.`,
+        await account.waitForTransaction(transaction_hash, {
+          retryInterval: 100,
+        }),
+      );
+    } catch (error: any) {
+      toast.error(extractedMessage(error.message));
     }
   };
 
@@ -226,5 +244,6 @@ export function systems({
     // remove,
     // start,
     move,
+    surrender,
   };
 }

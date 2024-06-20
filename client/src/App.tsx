@@ -7,7 +7,6 @@ import "./App.css";
 import { useGame } from "./hooks/useGame";
 import { useDojo } from "./dojo/useDojo";
 import { usePlayer } from "./hooks/usePlayer";
-import { Create } from "./ui/actions/Create";
 
 function App() {
   const {
