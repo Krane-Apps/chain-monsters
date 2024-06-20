@@ -1,11 +1,11 @@
 impl TeamIntrospect<> of dojo::database::introspect::Introspect<Team<>> {
     #[inline(always)]
     fn size() -> Option<usize> {
-        Option::Some(1)
+        Option::Some(2)
     }
 
     fn layout() -> dojo::database::introspect::Layout {
-        dojo::database::introspect::Layout::Fixed(array![251].span())
+        dojo::database::introspect::Layout::Fixed(array![8, 251].span())
     }
 
     #[inline(always)]
@@ -23,6 +23,11 @@ impl TeamIntrospect<> of dojo::database::introspect::Introspect<Team<>> {
                     dojo::database::introspect::Member {
                         name: 'id',
                         attrs: array!['key'].span(),
+                        ty: dojo::database::introspect::Introspect::<u8>::ty()
+                    },
+                    dojo::database::introspect::Member {
+                        name: 'alive_count',
+                        attrs: array![].span(),
                         ty: dojo::database::introspect::Introspect::<u8>::ty()
                     },
                     dojo::database::introspect::Member {
@@ -99,6 +104,7 @@ impl TeamModel of dojo::model::Model<Team> {
     #[inline(always)]
     fn values(self: @Team) -> Span<felt252> {
         let mut serialized = core::array::ArrayTrait::new();
+        core::serde::Serde::serialize(self.alive_count, ref serialized);
         core::array::ArrayTrait::append(ref serialized, *self.player_id);
         core::array::ArrayTrait::span(@serialized)
     }

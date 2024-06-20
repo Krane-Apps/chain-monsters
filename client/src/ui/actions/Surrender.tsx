@@ -5,12 +5,12 @@ import { Account } from "starknet";
 import { Button } from "../elements/ui/button";
 import { useGame } from "@/hooks/useGame";
 
-export const Move = () => {
+export const Surrender = () => {
   const {
     account: { account },
     master,
     setup: {
-      systemCalls: { move },
+      systemCalls: { surrender },
     },
   } = useDojo();
 
@@ -18,17 +18,8 @@ export const Move = () => {
   const { game } = useGame({ gameId: player?.game_id || 0 });
 
   const handleClick = useCallback(() => {
-    if (!game) return;
-    move({
-      account: account as Account,
-      game_id: game.id,
-      team_id: 1,
-      monster_id: 3,
-      x: 2,
-      y: 2,
-      special: false,
-    });
-  }, [account, game]);
+    surrender({ account: account as Account });
+  }, [account]);
 
   const disabled = useMemo(
     () => !account || !master || account == master || !player || !game,
@@ -36,9 +27,9 @@ export const Move = () => {
   );
 
   return (
-    <div className="flex gap-2 justify-center items-center">
+    <div>
       <Button disabled={disabled} onClick={handleClick}>
-        Move
+        Surrender
       </Button>
     </div>
   );

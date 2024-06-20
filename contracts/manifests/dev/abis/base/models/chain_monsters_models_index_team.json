@@ -335,6 +335,10 @@
         "type": "core::integer::u8"
       },
       {
+        "name": "alive_count",
+        "type": "core::integer::u8"
+      },
+      {
         "name": "player_id",
         "type": "core::felt252"
       }

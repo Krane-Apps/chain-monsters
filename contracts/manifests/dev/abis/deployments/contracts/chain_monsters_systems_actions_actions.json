@@ -121,6 +121,18 @@
         ],
         "outputs": [],
         "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "surrender",
+        "inputs": [
+          {
+            "name": "world",
+            "type": "dojo::world::IWorldDispatcher"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "view"
       }
     ]
   },

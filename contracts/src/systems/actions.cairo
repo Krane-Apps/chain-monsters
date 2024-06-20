@@ -29,6 +29,7 @@ trait IActions<TContractState> {
         y: u8,
         special: bool
     );
+    fn surrender(self: @TContractState, world: IWorldDispatcher);
 }
 
 // Contracts
@@ -160,6 +161,10 @@ mod actions {
             special: bool
         ) {
             self.playable._move(world, game_id, team_id, monster_id, x, y, special)
+        }
+
+        fn surrender(self: @ContractState, world: IWorldDispatcher) {
+            self.playable._surrender(world);
         }
     }
 }

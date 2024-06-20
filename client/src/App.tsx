@@ -4,6 +4,7 @@ import { Spawn } from "./ui/actions/Spawn";
 import { Create } from "./ui/actions/Create";
 import { Monsters } from "./ui/containers/Monsters";
 import { Move } from "./ui/actions/Move";
+import { Surrender } from "./ui/actions/Surrender";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Create />
       <Monsters />
       <Move />
+      <Surrender />
     </div>
   );
 }

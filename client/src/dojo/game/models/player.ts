@@ -9,6 +9,6 @@ export class Player {
   constructor(player: ComponentValue) {
     this.id = `0x${player.id.toString(16)}`;
     this.game_id = player.game_id;
-    this.name = shortString.decodeShortString(`0x${player.name.toString(16)}`);
+    this.name = shortString.decodeShortString(player.name.toString(16));
   }
 }

@@ -58,6 +58,8 @@ export interface Move extends Signer {
   special: boolean;
 }
 
+export interface Surrender extends Signer {}
+
 export type IWorld = Awaited<ReturnType<typeof setupWorld>>;
 
 export const getContractByName = (manifest: any, name: string) => {
@@ -72,8 +74,6 @@ export const getContractByName = (manifest: any, name: string) => {
 };
 
 export async function setupWorld(provider: DojoProvider, config: Config) {
-  const details: InvocationsDetails = { maxFee: 1e15 };
-
   function actions() {
     const contract_name = "actions";
     const contract = config.manifest.contracts.find((c: any) =>
@@ -86,13 +86,11 @@ export async function setupWorld(provider: DojoProvider, config: Config) {
     const spawn = async ({ account, name }: Spawn) => {
       try {
         const encoded_name = shortString.encodeShortString(name);
-        return await provider.execute(
-          account,
-          contract_name,
-          "spawn",
-          [provider.getWorldAddress(), encoded_name],
-          details,
-        );
+        return await provider.execute(account, {
+          contractName: contract_name,
+          entrypoint: "spawn",
+          calldata: [provider.getWorldAddress(), encoded_name],
+        });
       } catch (error) {
         console.error("Error executing spawn:", error);
         throw error;
@@ -101,13 +99,11 @@ export async function setupWorld(provider: DojoProvider, config: Config) {
 
     const create = async ({ account }: Create) => {
       try {
-        return await provider.execute(
-          account,
-          contract_name,
-          "create",
-          [provider.getWorldAddress()],
-          details,
-        );
+        return await provider.execute(account, {
+          contractName: contract_name,
+          entrypoint: "create",
+          calldata: [provider.getWorldAddress()],
+        });
       } catch (error) {
         console.error("Error executing create:", error);
         throw error;
@@ -229,11 +225,10 @@ export async function setupWorld(provider: DojoProvider, config: Config) {
       special,
     }: Move) => {
       try {
-        return await provider.execute(
-          account,
-          contract_name,
-          "move",
-          [
+        return await provider.execute(account, {
+          contractName: contract_name,
+          entrypoint: "move",
+          calldata: [
             provider.getWorldAddress(),
             game_id,
             team_id,
@@ -242,10 +237,22 @@ export async function setupWorld(provider: DojoProvider, config: Config) {
             y,
             special ? 1 : 0,
           ],
-          details,
-        );
+        });
       } catch (error) {
         console.error("Error executing move:", error);
+        throw error;
+      }
+    };
+
+    const surrender = async ({ account }: Surrender) => {
+      try {
+        return await provider.execute(account, {
+          contractName: contract_name,
+          entrypoint: "surrender",
+          calldata: [provider.getWorldAddress()],
+        });
+      } catch (error) {
+        console.error("Error executing surrender:", error);
         throw error;
       }
     };
@@ -262,6 +269,7 @@ export async function setupWorld(provider: DojoProvider, config: Config) {
       // remove,
       // start,
       move,
+      surrender,
     };
   }
 
