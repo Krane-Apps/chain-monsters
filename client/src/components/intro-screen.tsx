@@ -19,7 +19,6 @@ const IntroScreen = () => {
   } = useDojo();
   const { player } = usePlayer({ playerId: account.address });
   const { game } = useGame({ gameId: player?.game_id || 0 });
-  console.log("account ===", account, "master ==", master);
   const spawnDisabled = useMemo(
     () =>
       !account ||
@@ -27,12 +26,12 @@ const IntroScreen = () => {
       account == master ||
       !!player ||
       !playerName.trim(),
-    [account, master, player, playerName],
+    [account, master, player, playerName]
   );
 
   const disabled = useMemo(
     () => !account || !master || account == master || !player,
-    [account, master, player],
+    [account, master, player]
   );
 
   const handleSpawnClick = useCallback(() => {

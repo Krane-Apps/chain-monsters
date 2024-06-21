@@ -1,5 +1,19 @@
-import React, { useState, useEffect, useMemo, useRef } from "react";
-import { Box, LinearProgress } from "@mui/material";
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useRef,
+  useCallback,
+} from "react";
+import {
+  Box,
+  LinearProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+} from "@mui/material";
 import { useMonsters } from "@/hooks/useMonsters";
 import { useDojo } from "@/dojo/useDojo";
 import { usePlayer } from "@/hooks/usePlayer";
@@ -13,7 +27,7 @@ interface GameGridProps {}
 export const GameGrid: React.FC<GameGridProps> = () => {
   const initialGrid = useMemo(
     () => Array.from({ length: 5 }, () => Array(8).fill(null)),
-    [],
+    []
   );
   const [grid, setGrid] = useState<(SelectedCharacter | null)[][]>(initialGrid);
   const [selectedCharacter, setSelectedCharacter] =
@@ -23,12 +37,14 @@ export const GameGrid: React.FC<GameGridProps> = () => {
   const [attackingCells, setAttackingCells] = useState<{
     [key: string]: boolean;
   }>({});
+  const [deadCells, setDeadCells] = useState<{ [key: string]: boolean }>({});
+  const [gameOver, setGameOver] = useState(false);
 
   const {
     account: { account },
     master,
     setup: {
-      systemCalls: { move },
+      systemCalls: { move, create: createGame },
     },
   } = useDojo();
   const { player } = usePlayer({ playerId: account.address });
@@ -58,6 +74,12 @@ export const GameGrid: React.FC<GameGridProps> = () => {
       refreshGrid();
     }
   }, [monsters, initialGrid]);
+
+  useEffect(() => {
+    if (game?.over) {
+      setGameOver(true);
+    }
+  }, [game]);
 
   const refreshGrid = () => {
     const updatedGrid = initialGrid.map((row) => row.slice());
@@ -105,7 +127,7 @@ export const GameGrid: React.FC<GameGridProps> = () => {
       (availableMoves.some((move) => move[0] === row && move[1] === col) ||
         enemyCells.some((enemy) => enemy[0] === row && enemy[1] === col))
     ) {
-      const { id, x, y }: any = selectedCharacter;
+      const { id, x, y, damage }: any = selectedCharacter;
       if (!game) return;
       move({
         account: account as Account,
@@ -117,10 +139,13 @@ export const GameGrid: React.FC<GameGridProps> = () => {
         special: false,
       });
       if (enemyCells.some((enemy) => enemy[0] === row && enemy[1] === col)) {
+        const attackedMonster = grid[row][col];
+        if (attackedMonster && attackedMonster.health === damage) {
+          setDeadCells((prev) => ({ ...prev, [`${row}-${col}`]: true }));
+        }
         setAttackingCells((prev) => ({ ...prev, [`${x}-${y}`]: true }));
         setTimeout(() => {
           setAttackingCells((prev) => ({ ...prev, [`${x}-${y}`]: false }));
-          refreshGrid();
         }, 3000);
       } else {
         const newGrid = grid.map((row) => row.slice());
@@ -133,6 +158,11 @@ export const GameGrid: React.FC<GameGridProps> = () => {
       setEnemyCells([]);
     }
   };
+
+  const handleNewGame = useCallback(() => {
+    createGame({ account: account as Account });
+    setGameOver(false);
+  }, [account, createGame]);
 
   return (
     <Box
@@ -147,6 +177,7 @@ export const GameGrid: React.FC<GameGridProps> = () => {
           display: "grid",
           gridTemplateColumns: "repeat(8, 1fr)",
           gap: "4px",
+          mt: "13rem",
         }}
       >
         {grid.map((row, rowIndex) =>
@@ -163,22 +194,22 @@ export const GameGrid: React.FC<GameGridProps> = () => {
                 border: "1px solid black",
                 borderRadius: "8px",
                 backgroundColor: availableMoves.some(
-                  (move) => move[0] === rowIndex && move[1] === colIndex,
+                  (move) => move[0] === rowIndex && move[1] === colIndex
                 )
                   ? "green"
                   : enemyCells.some(
                         (enemy) =>
-                          enemy[0] === rowIndex && enemy[1] === colIndex,
+                          enemy[0] === rowIndex && enemy[1] === colIndex
                       )
                     ? "red"
                     : "transparent",
                 cursor:
                   (cell && cell.team_id !== 2) ||
                   availableMoves.some(
-                    (move) => move[0] === rowIndex && move[1] === colIndex,
+                    (move) => move[0] === rowIndex && move[1] === colIndex
                   ) ||
                   enemyCells.some(
-                    (enemy) => enemy[0] === rowIndex && enemy[1] === colIndex,
+                    (enemy) => enemy[0] === rowIndex && enemy[1] === colIndex
                   )
                     ? "pointer"
                     : "default",
@@ -210,9 +241,11 @@ export const GameGrid: React.FC<GameGridProps> = () => {
                   </Box>
                   <img
                     src={
-                      attackingCells[`${cell.x}-${cell.y}`]
-                        ? cell.attack
-                        : cell.idle
+                      deadCells[`${row}-${colIndex}`]
+                        ? cell.dead
+                        : attackingCells[`${cell.x}-${cell.y}`]
+                          ? cell.attack
+                          : cell.idle
                     }
                     alt={cell.name}
                     style={{
@@ -227,9 +260,20 @@ export const GameGrid: React.FC<GameGridProps> = () => {
                 </>
               )}
             </Box>
-          )),
+          ))
         )}
       </Box>
+      <Dialog open={gameOver} onClose={() => setGameOver(false)}>
+        <DialogTitle>Game Over</DialogTitle>
+        <DialogContent>
+          The game is over. Would you like to start a new game?
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleNewGame} color="primary">
+            Start New Game
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

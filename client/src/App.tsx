@@ -7,7 +7,6 @@ import "./App.css";
 import { useGame } from "./hooks/useGame";
 import { useDojo } from "./dojo/useDojo";
 import { usePlayer } from "./hooks/usePlayer";
-import { Create } from "@/ui/actions/Create";
 
 function App() {
   const {
@@ -32,10 +31,7 @@ function App() {
         alignItems: "center",
       }}
     >
-      <Container>
-        <Create />
-        {game ? <GameGrid /> : <IntroScreen />}
-      </Container>
+      <Container>{game ? <GameGrid /> : <IntroScreen />}</Container>
     </Box>
   );
 }
