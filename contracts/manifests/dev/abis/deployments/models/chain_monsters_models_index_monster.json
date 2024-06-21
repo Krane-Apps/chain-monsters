@@ -339,6 +339,14 @@
         "type": "core::integer::u8"
       },
       {
+        "name": "role",
+        "type": "core::integer::u8"
+      },
+      {
+        "name": "clan",
+        "type": "core::integer::u8"
+      },
+      {
         "name": "health",
         "type": "core::integer::u8"
       },

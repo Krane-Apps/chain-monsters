@@ -11,6 +11,8 @@ use chain_monsters::constants::{
     DEFAULT_MIN_X, DEFAULT_MIN_Y, DEFAULT_MAX_X, DEFAULT_MAX_Y
 };
 use chain_monsters::models::index::{Monster, MonsterPosition};
+use chain_monsters::types::role::Role;
+use chain_monsters::types::clan::Clan;
 
 mod errors {
     const MONSTER_NOT_EXISTS: felt252 = 'Monster: does not exist';
@@ -20,17 +22,25 @@ mod errors {
     const MONSTER_INVALID_TEAM: felt252 = 'Monster: invalid team';
     const MONSTER_ALREADY_DEAD: felt252 = 'Monster: already dead';
     const MONSTER_NOT_ENOUGH_MANA: felt252 = 'Monster: not enough mana';
+    const MONSTER_INVALID_ROLE: felt252 = 'Monster: invalid role';
+    const MONSTER_INVALID_CLAN: felt252 = 'Monster: invalid clan';
 }
 
 #[generate_trait]
 impl MonsterImpl of MonsterTrait {
     #[inline(always)]
-    fn new(game_id: u32, team_id: u8, id: u8) -> Monster {
+    fn new(game_id: u32, team_id: u8, id: u8, role: u8, clan: u8) -> Monster {
+        // [Check] Parameters are valid
+        assert(role != Role::None.into(), errors::MONSTER_INVALID_ROLE);
+        assert(clan != Clan::None.into(), errors::MONSTER_INVALID_CLAN);
+        // [Effect] Create monster
         let (x, y) = Grid::position(team_id, id);
         Monster {
             game_id,
             team_id,
             id,
+            role,
+            clan,
             health: DEFAULT_HEALTH,
             damage: DEFAULT_DAMAGE,
             mana: DEFAULT_MANA,
@@ -158,6 +168,8 @@ impl ZeroableMonster of Zeroable<Monster> {
             game_id: 0,
             team_id: 0,
             id: 0,
+            role: 0,
+            clan: 0,
             health: 0,
             damage: 0,
             mana: 0,

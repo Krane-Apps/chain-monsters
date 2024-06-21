@@ -11,7 +11,7 @@ deploy = "sozo clean && sozo build && sozo migrate plan && sozo migrate apply"
 
 [dependencies]
 alexandria_math = { git = "https://github.com/keep-starknet-strange/alexandria", rev = "78b0d51" }
-origami = { git = "https://github.com/Bal7hazar/origami", rev = "ca6cdd2"  }
+origami = { git = "https://github.com/dojoengine/origami", rev = "v0.7.2"  }
 dojo = { git = "https://github.com/dojoengine/dojo", tag = "v0.7.2" }
 
 [[target.dojo]]

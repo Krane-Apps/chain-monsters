@@ -9,7 +9,7 @@ use chain_monsters::elements::clans::interface::ClanTrait;
 impl ClanImpl of ClanTrait {
     #[inline(always)]
     fn damage(base: u8) -> u8 {
-        base
+        base * 2
     }
 
     #[inline(always)]
@@ -24,6 +24,6 @@ impl ClanImpl of ClanTrait {
 
     #[inline(always)]
     fn rate(base: u8) -> u8 {
-        base * 2
+        base
     }
 }

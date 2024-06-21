@@ -12,22 +12,28 @@ mod models {
 
 mod helpers {
     mod grid;
+    mod packer;
+}
+
+mod types {
+    mod role;
+    mod clan;
 }
 
 mod elements {
     mod clans {
         mod interface;
-    // mod goblin;
-    // mod golem;
-    // mod angel;
-    // mod minotaur;
+        mod goblin;
+        mod golem;
+        mod angel;
+        mod minotaur;
     }
 
     mod roles {
         mod interface;
-    // mod warrior;
-    // mod assassin;
-    // mod paladin;
+        mod warrior;
+        mod assassin;
+        mod paladin;
     }
 }
 

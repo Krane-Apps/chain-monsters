@@ -8,6 +8,7 @@ use starknet::ContractAddress;
 mod PlayableComponent {
     // Core imports
 
+    use core::option::OptionTrait;
     use core::array::ArrayTrait;
     use core::debug::PrintTrait;
 
@@ -32,11 +33,14 @@ mod PlayableComponent {
     use chain_monsters::models::player::{Player, PlayerTrait, PlayerAssert};
     use chain_monsters::models::team::{Team, TeamTrait, TeamAssert};
     use chain_monsters::models::monster::{Monster, MonsterTrait, MonsterAssert, ZeroableMonster};
+    use chain_monsters::helpers::packer::Packer;
 
     // Errors
 
     mod errors {
         const TEAM_NOT_FOUND: felt252 = 'Playable: team not found';
+        const INVALID_ROLES_LENGTH: felt252 = 'Playable: invalid roles length';
+        const INVALID_CLANS_LENGTH: felt252 = 'Playable: invalid clans length';
     }
 
     // Storage
@@ -54,7 +58,9 @@ mod PlayableComponent {
     impl InternalImpl<
         TContractState, +HasComponent<TContractState>
     > of InternalTrait<TContractState> {
-        fn _create(self: @ComponentState<TContractState>, world: IWorldDispatcher,) -> u32 {
+        fn _create(
+            self: @ComponentState<TContractState>, world: IWorldDispatcher, roles: u32, clans: u32
+        ) -> u32 {
             // [Setup] Datastore
             let store: Store = StoreTrait::new(world);
 
@@ -73,11 +79,15 @@ mod PlayableComponent {
             let monster_count = constants::DEFAULT_MONSTER_COUNT;
             let mut team = TeamTrait::new(game_id, team_id, monster_count, player.id);
             let mut monster_id = monster_count;
+            let mut roles: Array<u8> = Packer::unpack(roles, constants::ROLE_BIT_SIZE);
+            let mut clans: Array<u8> = Packer::unpack(clans, constants::CLAN_BIT_SIZE);
             loop {
                 if monster_id == 0 {
                     break;
                 }
-                let monster = MonsterTrait::new(game_id, team.id, monster_id);
+                let role = roles.pop_front().expect(errors::INVALID_ROLES_LENGTH);
+                let clan = clans.pop_front().expect(errors::INVALID_CLANS_LENGTH);
+                let monster = MonsterTrait::new(game_id, team.id, monster_id, role, clan);
                 game.set_positions(monster.x, monster.y);
                 store.set_monster(monster);
                 monster_id -= 1;
@@ -93,7 +103,9 @@ mod PlayableComponent {
                 if monster_id == 0 {
                     break;
                 }
-                let monster = MonsterTrait::new(game_id, team.id, monster_id);
+                let role = monster_id;
+                let clan = monster_id;
+                let monster = MonsterTrait::new(game_id, team.id, monster_id, role, clan);
                 game.set_positions(monster.x, monster.y);
                 store.set_monster(monster);
                 monster_id -= 1;

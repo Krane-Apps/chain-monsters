@@ -1,11 +1,11 @@
 impl MonsterIntrospect<> of dojo::database::introspect::Introspect<Monster<>> {
     #[inline(always)]
     fn size() -> Option<usize> {
-        Option::Some(7)
+        Option::Some(9)
     }
 
     fn layout() -> dojo::database::introspect::Layout {
-        dojo::database::introspect::Layout::Fixed(array![8, 8, 8, 8, 8, 8, 8].span())
+        dojo::database::introspect::Layout::Fixed(array![8, 8, 8, 8, 8, 8, 8, 8, 8].span())
     }
 
     #[inline(always)]
@@ -28,6 +28,16 @@ impl MonsterIntrospect<> of dojo::database::introspect::Introspect<Monster<>> {
                     dojo::database::introspect::Member {
                         name: 'id',
                         attrs: array!['key'].span(),
+                        ty: dojo::database::introspect::Introspect::<u8>::ty()
+                    },
+                    dojo::database::introspect::Member {
+                        name: 'role',
+                        attrs: array![].span(),
+                        ty: dojo::database::introspect::Introspect::<u8>::ty()
+                    },
+                    dojo::database::introspect::Member {
+                        name: 'clan',
+                        attrs: array![].span(),
                         ty: dojo::database::introspect::Introspect::<u8>::ty()
                     },
                     dojo::database::introspect::Member {
@@ -135,6 +145,8 @@ impl MonsterModel of dojo::model::Model<Monster> {
     #[inline(always)]
     fn values(self: @Monster) -> Span<felt252> {
         let mut serialized = core::array::ArrayTrait::new();
+        core::serde::Serde::serialize(self.role, ref serialized);
+        core::serde::Serde::serialize(self.clan, ref serialized);
         core::serde::Serde::serialize(self.health, ref serialized);
         core::serde::Serde::serialize(self.damage, ref serialized);
         core::serde::Serde::serialize(self.mana, ref serialized);

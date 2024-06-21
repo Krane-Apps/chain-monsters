@@ -64,7 +64,9 @@ mod setup {
         systems.actions.spawn(world, PLAYER_NAME);
 
         // [Setup] Game if mode is set
-        let game_id = systems.actions.create(world);
+        let roles = 0x3213;
+        let clans = 0x1234;
+        let game_id = systems.actions.create(world, roles, clans);
 
         let context = Context {
             player_id: PLAYER().into(), player_name: PLAYER_NAME, game_id: game_id,

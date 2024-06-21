@@ -41,6 +41,8 @@ struct Monster {
     team_id: u8,
     #[key]
     id: u8,
+    role: u8,
+    clan: u8,
     health: u8,
     damage: u8,
     mana: u8,

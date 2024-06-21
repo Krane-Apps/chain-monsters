@@ -11,7 +11,7 @@ use dojo::world::IWorldDispatcher;
 #[starknet::interface]
 trait IActions<TContractState> {
     fn spawn(self: @TContractState, world: IWorldDispatcher, name: felt252,);
-    fn create(self: @TContractState, world: IWorldDispatcher) -> u32;
+    fn create(self: @TContractState, world: IWorldDispatcher, roles: u32, clans: u32) -> u32;
     // fn join(self: @TContractState, world: IWorldDispatcher, game_id: u32);
     // fn ready(self: @TContractState, world: IWorldDispatcher, game_id: u32, status: bool);
     // fn transfer(self: @TContractState, world: IWorldDispatcher, game_id: u32, team_index: u8);
@@ -146,8 +146,8 @@ mod actions {
         //     self.hostable._start(world, game_id)
         // }
 
-        fn create(self: @ContractState, world: IWorldDispatcher) -> u32 {
-            self.playable._create(world)
+        fn create(self: @ContractState, world: IWorldDispatcher, roles: u32, clans: u32) -> u32 {
+            self.playable._create(world, roles, clans)
         }
 
         fn move(

@@ -13,3 +13,8 @@ const DEFAULT_MIN_X: u8 = 0;
 const DEFAULT_MAX_X: u8 = 7;
 const DEFAULT_MIN_Y: u8 = 0;
 const DEFAULT_MAX_Y: u8 = 4;
+
+// Packing
+
+const ROLE_BIT_SIZE: u32 = 16;
+const CLAN_BIT_SIZE: u32 = 16;
