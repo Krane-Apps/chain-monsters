@@ -26,12 +26,12 @@ const IntroScreen = () => {
       account == master ||
       !!player ||
       !playerName.trim(),
-    [account, master, player, playerName]
+    [account, master, player, playerName],
   );
 
   const disabled = useMemo(
     () => !account || !master || account == master || !player,
-    [account, master, player]
+    [account, master, player],
   );
 
   const handleSpawnClick = useCallback(() => {
@@ -39,7 +39,11 @@ const IntroScreen = () => {
   }, [account, playerName]);
 
   const handleStart = useCallback(() => {
-    createGame({ account: account as Account });
+    createGame({
+      account: account as Account,
+      roles: [1, 1, 1, 1],
+      clans: [1, 1, 1, 1],
+    });
   }, [account]);
 
   return (

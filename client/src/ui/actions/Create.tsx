@@ -4,7 +4,13 @@ import { useCallback, useMemo } from "react";
 import { Account } from "starknet";
 import { Button } from "../elements/ui/button";
 
-export const Create = () => {
+export const Create = ({
+  roles,
+  clans,
+}: {
+  roles: number[];
+  clans: number[];
+}) => {
   const {
     account: { account },
     master,
@@ -16,7 +22,7 @@ export const Create = () => {
   const { player } = usePlayer({ playerId: account.address });
 
   const handleClick = useCallback(() => {
-    create({ account: account as Account });
+    create({ account: account as Account, roles, clans });
   }, [account]);
 
   const disabled = useMemo(

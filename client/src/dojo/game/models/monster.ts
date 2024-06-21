@@ -4,6 +4,8 @@ export class Monster {
   public game_id: number;
   public team_id: number;
   public id: number;
+  public role: number;
+  public clan: number;
   public health: number;
   public damage: number;
   public mana: number;
@@ -16,6 +18,8 @@ export class Monster {
     this.game_id = monster.game_id;
     this.team_id = monster.team_id;
     this.id = monster.id;
+    this.role = monster.role;
+    this.clan = monster.clan;
     this.health = monster.health;
     this.damage = monster.damage;
     this.mana = monster.mana;

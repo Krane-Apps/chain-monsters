@@ -3,6 +3,7 @@
 import { DojoProvider } from "@dojoengine/core";
 import { Config } from "../../../dojo.config.ts";
 import { Account, InvocationsDetails, shortString } from "starknet";
+import { Packer } from "../game/types/packer.ts";
 
 export interface Signer {
   account: Account;
@@ -16,7 +17,10 @@ export interface Spawn extends Signer {
   name: string;
 }
 
-export interface Create extends Signer {}
+export interface Create extends Signer {
+  roles: number[];
+  clans: number[];
+}
 
 export interface Join extends Signer {
   game_id: number;
@@ -97,12 +101,16 @@ export async function setupWorld(provider: DojoProvider, config: Config) {
       }
     };
 
-    const create = async ({ account }: Create) => {
+    const create = async ({ account, roles, clans }: Create) => {
       try {
         return await provider.execute(account, {
           contractName: contract_name,
           entrypoint: "create",
-          calldata: [provider.getWorldAddress()],
+          calldata: [
+            provider.getWorldAddress(),
+            Packer.pack(roles, 4n),
+            Packer.pack(clans, 4n),
+          ],
         });
       } catch (error) {
         console.error("Error executing create:", error);

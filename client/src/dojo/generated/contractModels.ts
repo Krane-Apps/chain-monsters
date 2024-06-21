@@ -46,6 +46,8 @@ export function defineContractComponents(world: World) {
           game_id: RecsType.Number,
           team_id: RecsType.Number,
           id: RecsType.Number,
+          role: RecsType.Number,
+          clan: RecsType.Number,
           health: RecsType.Number,
           damage: RecsType.Number,
           mana: RecsType.Number,
@@ -59,6 +61,8 @@ export function defineContractComponents(world: World) {
             name: "Monster",
             types: [
               "u32",
+              "u8",
+              "u8",
               "u8",
               "u8",
               "u8",
