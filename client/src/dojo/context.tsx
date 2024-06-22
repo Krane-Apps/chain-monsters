@@ -50,6 +50,7 @@ export const DojoProvider = ({
     clear,
     count,
     copyToClipboard,
+    checkIsDeployed,
     applyFromClipboard,
   } = useBurnerManager({
     burnerManager,
@@ -67,6 +68,7 @@ export const DojoProvider = ({
           deselect,
           remove,
           clear,
+          checkIsDeployed,
           count,
           account: account ? account : masterAccount,
           isDeploying,

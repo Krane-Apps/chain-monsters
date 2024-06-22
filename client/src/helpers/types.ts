@@ -14,5 +14,10 @@ export type Characters = {
 };
 
 export type SelectedCharacter = {
+  team_id: number;
+  health: number;
+  mana: number;
+  x: number;
+  y: number;
   clan: Clan;
 } & Character;

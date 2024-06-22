@@ -160,7 +160,9 @@ export const GameGrid: React.FC<GameGridProps> = () => {
   };
 
   const handleNewGame = useCallback(() => {
-    createGame({ account: account as Account });
+    const roles = [1, 1, 1, 1];
+    const clans = [1, 1, 1, 1];
+    createGame({ account: account as Account, roles, clans });
     setGameOver(false);
   }, [account, createGame]);
 
