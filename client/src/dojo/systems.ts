@@ -205,7 +205,7 @@ export function systems({
       });
 
       notify(
-        `Player has moved.`,
+        `Player action confirmed.`,
         await account.waitForTransaction(transaction_hash, {
           retryInterval: 100,
         }),

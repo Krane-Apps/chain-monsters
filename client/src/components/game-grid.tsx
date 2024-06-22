@@ -13,6 +13,7 @@ import {
   DialogContent,
   DialogActions,
   Button,
+  Typography,
 } from "@mui/material";
 import { useMonsters } from "@/hooks/useMonsters";
 import { useDojo } from "@/dojo/useDojo";
@@ -21,13 +22,14 @@ import { useGame } from "@/hooks/useGame";
 import { SelectedCharacter } from "@/helpers/types";
 import { characters } from "@/helpers/constants";
 import { Account } from "starknet";
+import attackSound from "../assets/sound_effect/hammer_attack.wav";
 
 interface GameGridProps {}
 
 export const GameGrid: React.FC<GameGridProps> = () => {
   const initialGrid = useMemo(
     () => Array.from({ length: 5 }, () => Array(8).fill(null)),
-    [],
+    []
   );
   const [grid, setGrid] = useState<(SelectedCharacter | null)[][]>(initialGrid);
   const [selectedCharacter, setSelectedCharacter] =
@@ -39,6 +41,13 @@ export const GameGrid: React.FC<GameGridProps> = () => {
   }>({});
   const [deadCells, setDeadCells] = useState<{ [key: string]: boolean }>({});
   const [gameOver, setGameOver] = useState(false);
+  const [currentAttack, setCurrentAttack] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
+  const [winner, setWinner] = useState<string | null>(null);
+
+  const attackAudio = useMemo(() => new Audio(attackSound), []);
 
   const {
     account: { account },
@@ -61,9 +70,11 @@ export const GameGrid: React.FC<GameGridProps> = () => {
       }
       for (let i = 0; i < monsters.length; i++) {
         if (
-          monsters[i].id !== prevMonsters[i].id ||
+          monsters[i]?.id !== prevMonsters[i]?.id ||
           monsters[i].x !== prevMonsters[i].x ||
-          monsters[i].y !== prevMonsters[i].y
+          monsters[i].y !== prevMonsters[i].y ||
+          monsters[i].health !== prevMonsters[i].health ||
+          monsters[i].mana !== prevMonsters[i].mana
         ) {
           return true;
         }
@@ -73,18 +84,21 @@ export const GameGrid: React.FC<GameGridProps> = () => {
     if (monsters && monsters.length > 0 && haveMonstersChanged()) {
       refreshGrid();
     }
+    prevMonstersRef.current = monsters;
   }, [monsters, initialGrid]);
 
   useEffect(() => {
     if (game?.over) {
       setGameOver(true);
+      const team1Monsters = monsters.filter((monster) => monster.team_id === 1);
+      setWinner(team1Monsters.length > 0 ? "You won!" : "AI wins!");
     }
-  }, [game]);
+  }, [game, monsters]);
 
   const refreshGrid = () => {
     const updatedGrid = initialGrid.map((row) => row.slice());
     monsters.forEach((monster: any) => {
-      const char = characters.find((c) => c.id === monster.id);
+      const char = characters.find((c) => c?.id === monster?.id);
       if (char) {
         updatedGrid[monster.y][monster.x] = { ...char, ...monster };
       }
@@ -131,7 +145,7 @@ export const GameGrid: React.FC<GameGridProps> = () => {
       if (!game) return;
       move({
         account: account as Account,
-        game_id: game.id,
+        game_id: game?.id,
         team_id: 1,
         monster_id: id,
         x: col,
@@ -139,13 +153,20 @@ export const GameGrid: React.FC<GameGridProps> = () => {
         special: false,
       });
       if (enemyCells.some((enemy) => enemy[0] === row && enemy[1] === col)) {
+        attackAudio.loop = true;
+        attackAudio.play();
         const attackedMonster = grid[row][col];
-        if (attackedMonster && attackedMonster.health === damage) {
+        if (attackedMonster && attackedMonster.health <= damage) {
           setDeadCells((prev) => ({ ...prev, [`${row}-${col}`]: true }));
         }
         setAttackingCells((prev) => ({ ...prev, [`${x}-${y}`]: true }));
+        setCurrentAttack({ x: row, y: col });
         setTimeout(() => {
           setAttackingCells((prev) => ({ ...prev, [`${x}-${y}`]: false }));
+          setCurrentAttack(null);
+          attackAudio.loop = false;
+          attackAudio.pause();
+          attackAudio.currentTime = 0;
         }, 3000);
       } else {
         const newGrid = grid.map((row) => row.slice());
@@ -164,6 +185,7 @@ export const GameGrid: React.FC<GameGridProps> = () => {
     const clans = [1, 1, 1, 1];
     createGame({ account: account as Account, roles, clans });
     setGameOver(false);
+    setWinner(null);
   }, [account, createGame]);
 
   return (
@@ -187,34 +209,32 @@ export const GameGrid: React.FC<GameGridProps> = () => {
             <Box
               key={`${rowIndex}-${colIndex}`}
               sx={{
-                width: 100,
-                height: 100,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
+                width: 120,
+                height: 120,
+                position: "relative",
                 border: "1px solid black",
                 borderRadius: "8px",
                 backgroundColor: availableMoves.some(
-                  (move) => move[0] === rowIndex && move[1] === colIndex,
+                  (move) => move[0] === rowIndex && move[1] === colIndex
                 )
                   ? "green"
                   : enemyCells.some(
                         (enemy) =>
-                          enemy[0] === rowIndex && enemy[1] === colIndex,
+                          enemy[0] === rowIndex && enemy[1] === colIndex
                       )
                     ? "red"
                     : "transparent",
                 cursor:
                   (cell && cell.team_id !== 2) ||
                   availableMoves.some(
-                    (move) => move[0] === rowIndex && move[1] === colIndex,
+                    (move) => move[0] === rowIndex && move[1] === colIndex
                   ) ||
                   enemyCells.some(
-                    (enemy) => enemy[0] === rowIndex && enemy[1] === colIndex,
+                    (enemy) => enemy[0] === rowIndex && enemy[1] === colIndex
                   )
                     ? "pointer"
                     : "default",
+                overflow: "visible",
               }}
               onClick={() =>
                 cell && cell.team_id !== 2
@@ -224,26 +244,55 @@ export const GameGrid: React.FC<GameGridProps> = () => {
             >
               {cell && (
                 <>
-                  <Box sx={{ width: "60%", mb: -2.5 }}>
-                    <LinearProgress
-                      variant="determinate"
-                      color="warning"
-                      value={(cell.health / 100) * 100}
-                      sx={{ borderRadius: "1rem" }}
-                    />
-                    <LinearProgress
-                      variant="determinate"
-                      value={(cell.mana / 100) * 100}
-                      color="info"
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      zIndex: 1,
+                      textAlign: "center",
+                      backgroundColor: "rgba(255, 255, 255, 0.7)",
+                      padding: "2px 0",
+                      mt: "-3rem",
+                      borderBottom: "1px solid #ccc",
+                      overflow: "visible",
+                      borderRadius: "0.5rem",
+                    }}
+                  >
+                    <Typography variant="subtitle2">
+                      Team {cell.team_id}
+                    </Typography>
+                    <Box
                       sx={{
-                        mt: "0.25rem",
-                        borderRadius: "1rem",
+                        width: "80%",
+                        margin: "0 auto",
                       }}
-                    />
+                    >
+                      <LinearProgress
+                        variant="determinate"
+                        color="warning"
+                        value={(cell.health / 100) * 100}
+                        sx={{ borderRadius: "1rem", height: "8px" }}
+                      />
+                      <LinearProgress
+                        variant="determinate"
+                        value={(cell.mana / 100) * 100}
+                        color="info"
+                        sx={{
+                          mt: "2px",
+                          borderRadius: "1rem",
+                          height: "8px",
+                        }}
+                      />
+                    </Box>
                   </Box>
                   <img
                     src={
-                      deadCells[`${row}-${colIndex}`]
+                      deadCells[`${row}-${colIndex}`] ||
+                      (currentAttack &&
+                        currentAttack.x === rowIndex &&
+                        currentAttack.y === colIndex)
                         ? cell.dead
                         : attackingCells[`${cell.x}-${cell.y}`]
                           ? cell.attack
@@ -251,22 +300,26 @@ export const GameGrid: React.FC<GameGridProps> = () => {
                     }
                     alt={cell.name}
                     style={{
-                      width: "100%",
+                      width: "120px",
                       height: "200px",
-                      margin: 0,
-                      marginBottom: "0px",
+                      position: "absolute",
+                      top: "-60px",
+                      left: "-0px",
                       objectFit: "cover",
+                      overflow: "visible",
                       backgroundColor: "transparent",
+                      transform: cell.team_id === 2 ? "scaleX(-1)" : "none",
+                      zIndex: 0,
                     }}
                   />
                 </>
               )}
             </Box>
-          )),
+          ))
         )}
       </Box>
       <Dialog open={gameOver} onClose={() => setGameOver(false)}>
-        <DialogTitle>Game Over</DialogTitle>
+        <DialogTitle>{winner}</DialogTitle>
         <DialogContent>
           The game is over. Would you like to start a new game?
         </DialogContent>
