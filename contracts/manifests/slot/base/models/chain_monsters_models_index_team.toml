@@ -1,0 +1,25 @@
+kind = "DojoModel"
+class_hash = "0x7e6289abfdb7443d5e07ee9a74fc09e08c866c9e464db32f564f3e15e20e795"
+original_class_hash = "0x7e6289abfdb7443d5e07ee9a74fc09e08c866c9e464db32f564f3e15e20e795"
+abi = "manifests/slot/abis/base/models/chain_monsters_models_index_team.json"
+name = "chain_monsters::models::index::team"
+
+[[members]]
+name = "game_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "id"
+type = "u8"
+key = true
+
+[[members]]
+name = "alive_count"
+type = "u8"
+key = false
+
+[[members]]
+name = "player_id"
+type = "felt252"
+key = false

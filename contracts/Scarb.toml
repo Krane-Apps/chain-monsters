@@ -26,8 +26,8 @@ private_key = "0x2bbf4f9fd0bbb2e60b0316c1fe0b76cf7a4d0198bd493ced9b8df2a3a24d68a
 
 [profile.slot.tool.dojo.env]
 rpc_url = "https://api.cartridge.gg/x/chain-monsters/katana"
-account_address = ""
-private_key = ""
+account_address = "0x6afce438887a50e60946f45654fecf7ac1b9ce408e39615a644ea4085d0de01"
+private_key = "0x657336c8fc9b909fc95f8f196d308af559342693465bc74611f5eb38faf1ca9"
 
 [tool.dojo.world]
 name = "Chain Monsters"

@@ -1,0 +1,228 @@
+[world]
+kind = "WorldContract"
+class_hash = "0x3f63cecdc4964acafb921ba2934c6507d1b3c344edb64c2762cf08053169ab9"
+original_class_hash = "0x3f63cecdc4964acafb921ba2934c6507d1b3c344edb64c2762cf08053169ab9"
+abi = "manifests/slot/abis/deployments/dojo_world_world.json"
+address = "0x26663f285f4571e8b1f980cb6537f1a6eeb63291e2aed8216bf4ea5678ffc8a"
+transaction_hash = "0x7ca0568bcab4af3e39b62961b717dec526d95a8f980033234c767f7cf3d8763"
+block_number = 3
+seed = "v0"
+name = "dojo::world::world"
+
+[world.metadata]
+profile_name = "slot"
+rpc_url = "https://api.cartridge.gg/x/chain-monsters/katana"
+
+[base]
+kind = "Class"
+class_hash = "0x22f3e55b61d86c2ac5239fa3b3b8761f26b9a5c0b5f61ddbd5d756ced498b46"
+original_class_hash = "0x22f3e55b61d86c2ac5239fa3b3b8761f26b9a5c0b5f61ddbd5d756ced498b46"
+name = "dojo::base::base"
+
+[[contracts]]
+kind = "DojoContract"
+address = "0x1fc0e75b412cb6246a35b49db3c56832b0017f7cc07fe09514eea10ebcfc577"
+class_hash = "0x5c08a542a42136ccf53d0a6629476144eaaa95e729775310ea0ba767165c227"
+original_class_hash = "0x5c08a542a42136ccf53d0a6629476144eaaa95e729775310ea0ba767165c227"
+base_class_hash = "0x22f3e55b61d86c2ac5239fa3b3b8761f26b9a5c0b5f61ddbd5d756ced498b46"
+abi = "manifests/slot/abis/deployments/contracts/chain_monsters_systems_actions_actions.json"
+reads = []
+writes = []
+computed = []
+init_calldata = []
+name = "chain_monsters::systems::actions::actions"
+
+[[models]]
+kind = "DojoModel"
+class_hash = "0x325cddb5fd2afa0d85dbea43058ec6c0d4740e9f98b49ec9e39f2f34ba1737f"
+original_class_hash = "0x325cddb5fd2afa0d85dbea43058ec6c0d4740e9f98b49ec9e39f2f34ba1737f"
+abi = "manifests/slot/abis/deployments/models/chain_monsters_models_index_game.json"
+name = "chain_monsters::models::index::game"
+
+[[models.members]]
+name = "id"
+type = "u32"
+key = true
+
+[[models.members]]
+name = "over"
+type = "bool"
+key = false
+
+[[models.members]]
+name = "players"
+type = "u8"
+key = false
+
+[[models.members]]
+name = "player_count"
+type = "u8"
+key = false
+
+[[models.members]]
+name = "positions"
+type = "u64"
+key = false
+
+[[models.members]]
+name = "nonce"
+type = "u16"
+key = false
+
+[[models.members]]
+name = "seed"
+type = "felt252"
+key = false
+
+[[models.members]]
+name = "host"
+type = "felt252"
+key = false
+
+[[models]]
+kind = "DojoModel"
+class_hash = "0x1b7c3d532ae3458e65862636c9bccbed8f58209e7317960aa20b0fa90068e03"
+original_class_hash = "0x1b7c3d532ae3458e65862636c9bccbed8f58209e7317960aa20b0fa90068e03"
+abi = "manifests/slot/abis/deployments/models/chain_monsters_models_index_monster.json"
+name = "chain_monsters::models::index::monster"
+
+[[models.members]]
+name = "game_id"
+type = "u32"
+key = true
+
+[[models.members]]
+name = "team_id"
+type = "u8"
+key = true
+
+[[models.members]]
+name = "id"
+type = "u8"
+key = true
+
+[[models.members]]
+name = "role"
+type = "u8"
+key = false
+
+[[models.members]]
+name = "clan"
+type = "u8"
+key = false
+
+[[models.members]]
+name = "health"
+type = "u8"
+key = false
+
+[[models.members]]
+name = "damage"
+type = "u8"
+key = false
+
+[[models.members]]
+name = "mana"
+type = "u8"
+key = false
+
+[[models.members]]
+name = "x"
+type = "u8"
+key = false
+
+[[models.members]]
+name = "y"
+type = "u8"
+key = false
+
+[[models.members]]
+name = "last_x"
+type = "u8"
+key = false
+
+[[models.members]]
+name = "last_y"
+type = "u8"
+key = false
+
+[[models]]
+kind = "DojoModel"
+class_hash = "0x7c87dc6a903a868abe9ed12b708bdd1c881eb02f4d8c43b064993a98cea0eb0"
+original_class_hash = "0x7c87dc6a903a868abe9ed12b708bdd1c881eb02f4d8c43b064993a98cea0eb0"
+abi = "manifests/slot/abis/deployments/models/chain_monsters_models_index_monster_position.json"
+name = "chain_monsters::models::index::monster_position"
+
+[[models.members]]
+name = "game_id"
+type = "u32"
+key = true
+
+[[models.members]]
+name = "x"
+type = "u8"
+key = true
+
+[[models.members]]
+name = "y"
+type = "u8"
+key = true
+
+[[models.members]]
+name = "team_id"
+type = "u8"
+key = false
+
+[[models.members]]
+name = "monster_id"
+type = "u8"
+key = false
+
+[[models]]
+kind = "DojoModel"
+class_hash = "0x68c8bed975b3703aa77d7feedee2cbb439cad5a7de5635eb997e30627d9c671"
+original_class_hash = "0x68c8bed975b3703aa77d7feedee2cbb439cad5a7de5635eb997e30627d9c671"
+abi = "manifests/slot/abis/deployments/models/chain_monsters_models_index_player.json"
+name = "chain_monsters::models::index::player"
+
+[[models.members]]
+name = "id"
+type = "felt252"
+key = true
+
+[[models.members]]
+name = "game_id"
+type = "u32"
+key = false
+
+[[models.members]]
+name = "name"
+type = "felt252"
+key = false
+
+[[models]]
+kind = "DojoModel"
+class_hash = "0x7e6289abfdb7443d5e07ee9a74fc09e08c866c9e464db32f564f3e15e20e795"
+original_class_hash = "0x7e6289abfdb7443d5e07ee9a74fc09e08c866c9e464db32f564f3e15e20e795"
+abi = "manifests/slot/abis/deployments/models/chain_monsters_models_index_team.json"
+name = "chain_monsters::models::index::team"
+
+[[models.members]]
+name = "game_id"
+type = "u32"
+key = true
+
+[[models.members]]
+name = "id"
+type = "u8"
+key = true
+
+[[models.members]]
+name = "alive_count"
+type = "u8"
+key = false
+
+[[models.members]]
+name = "player_id"
+type = "felt252"
+key = false
