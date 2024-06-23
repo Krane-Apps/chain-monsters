@@ -5,7 +5,6 @@ import { useComponentValue } from "@dojoengine/react";
 import { Entity } from "@dojoengine/recs";
 
 export const usePlayer = ({ playerId }: { playerId: string }) => {
-  console.log("usePlayer", playerId)
   const {
     setup: {
       clientModels: {
@@ -19,9 +18,7 @@ export const usePlayer = ({ playerId }: { playerId: string }) => {
     () => getEntityIdFromKeys([BigInt(playerId)]) as Entity,
     [playerId],
   );
-  console.log("playerKey", playerKey)
   const component = useComponentValue(Player, playerKey);
-  console.log("component", component)
   const player = useMemo(() => {
     return component ? new PlayerClass(component) : null;
   }, [component]);
