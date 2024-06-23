@@ -54,7 +54,8 @@ const GameScene = () => {
   } = useDojo();
   const { player } = usePlayer({ playerId: account?.address || "0x0" });
   const { game } = useGame({ gameId: player?.game_id || 0 });
-  return <Container>{game ? <GameGrid /> : <IntroScreen />}</Container>;
+  console.log('game', game);
+  return !!game ? <GameGrid /> : <IntroScreen />;
 };
 
 function App() {
@@ -77,7 +78,9 @@ function App() {
           alignItems: "center",
         }}
       >
-        <GameScene />
+        <Container>
+          <GameScene />
+        </Container>
       </Box>
     </StarknetConfig>
   );
