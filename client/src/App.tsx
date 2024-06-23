@@ -13,7 +13,7 @@ import {
   starkscan,
   jsonRpcProvider,
 } from "@starknet-react/core";
-import { Chain, sepolia, mainnet } from "@starknet-react/chains";
+import { Chain, sepolia } from "@starknet-react/chains";
 import CartridgeConnector from "@cartridge/connector";
 
 function rpc(_chain: Chain) {
