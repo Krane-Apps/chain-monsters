@@ -15,7 +15,7 @@ export const Spawn = () => {
     },
   } = useDojo();
 
-  const { player } = usePlayer({ playerId: account.address });
+  const { player } = usePlayer({ playerId: account?.address || "0x0" });
 
   const handleClick = useCallback(() => {
     spawn({ account: account as Account, name: playerName });

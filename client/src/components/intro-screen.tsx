@@ -7,18 +7,28 @@ import { shortenHex } from "@dojoengine/utils";
 import { usePlayer } from "@/hooks/usePlayer";
 import { Account } from "starknet";
 import { useGame } from "@/hooks/useGame";
+import { useAccount, useConnect, useDisconnect } from "@starknet-react/core";
 
 const IntroScreen = () => {
   const [playerName, setPlayerName] = useState("");
   const {
-    account: { account, create },
+    account: { account },
     master,
     setup: {
       systemCalls: { spawn: spawnPlayer, create: createGame },
     },
   } = useDojo();
-  const { player } = usePlayer({ playerId: account.address });
+  const { connect, connectors } = useConnect();
+  const { disconnect } = useDisconnect();
+  const { isConnected, address } = useAccount();
+
+  const { player } = usePlayer({ playerId: account?.address || "0x0" });
   const { game } = useGame({ gameId: player?.game_id || 0 });
+
+  const connectWallet = async () => {
+    connect({ connector: connectors[0] });
+  };
+
   const spawnDisabled = useMemo(
     () =>
       !account ||
@@ -56,7 +66,7 @@ const IntroScreen = () => {
     >
       <img src={logo} width="600" height="300" alt="chain_monsters_logo" />
       <Box
-        className="flex gap-2 justify-center items-center"
+        className={`flex gap-2 justify-center items-center ${isConnected && "hidden"}`}
         sx={{ mt: "2rem" }}
       >
         <Button
@@ -68,9 +78,9 @@ const IntroScreen = () => {
             borderRadius: 100,
             bgcolor: "#FFAE02",
           }}
-          onClick={() => create()}
+          onClick={connectWallet}
         >
-          Create Account {shortenHex(account.address)}
+          Connect Account
         </Button>
       </Box>
       <Box

@@ -29,6 +29,11 @@ rpc_url = "https://api.cartridge.gg/x/chain-monsters/katana"
 account_address = "0x6afce438887a50e60946f45654fecf7ac1b9ce408e39615a644ea4085d0de01"
 private_key = "0x657336c8fc9b909fc95f8f196d308af559342693465bc74611f5eb38faf1ca9"
 
+[profile.sepolia.tool.dojo.env]
+rpc_url = "https://free-rpc.nethermind.io/sepolia-juno/v0_6"
+account_address = "0x00aeee5f9255cb00b96af5b4316040866d634d6b144737972039a8f782d586c0"
+private_key = "0x0680406796ae608707d4847e97cbd8ca0a60febd2404182fcd997944853e57dd"
+
 [tool.dojo.world]
 name = "Chain Monsters"
 description = "Action game."

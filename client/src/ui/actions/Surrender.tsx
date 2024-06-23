@@ -14,7 +14,7 @@ export const Surrender = () => {
     },
   } = useDojo();
 
-  const { player } = usePlayer({ playerId: account.address });
+  const { player } = usePlayer({ playerId: account?.address || "0x0" });
   const { game } = useGame({ gameId: player?.game_id || 0 });
 
   const handleClick = useCallback(() => {

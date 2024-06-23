@@ -19,7 +19,7 @@ export const Create = ({
     },
   } = useDojo();
 
-  const { player } = usePlayer({ playerId: account.address });
+  const { player } = usePlayer({ playerId: account?.address || "0x0" });
 
   const handleClick = useCallback(() => {
     create({ account: account as Account, roles, clans });

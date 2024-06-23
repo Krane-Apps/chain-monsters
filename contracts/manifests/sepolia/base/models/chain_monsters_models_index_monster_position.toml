@@ -1,0 +1,30 @@
+kind = "DojoModel"
+class_hash = "0x7c87dc6a903a868abe9ed12b708bdd1c881eb02f4d8c43b064993a98cea0eb0"
+original_class_hash = "0x7c87dc6a903a868abe9ed12b708bdd1c881eb02f4d8c43b064993a98cea0eb0"
+abi = "manifests/sepolia/abis/base/models/chain_monsters_models_index_monster_position.json"
+name = "chain_monsters::models::index::monster_position"
+
+[[members]]
+name = "game_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "x"
+type = "u8"
+key = true
+
+[[members]]
+name = "y"
+type = "u8"
+key = true
+
+[[members]]
+name = "team_id"
+type = "u8"
+key = false
+
+[[members]]
+name = "monster_id"
+type = "u8"
+key = false
